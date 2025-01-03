@@ -1,13 +1,6 @@
 export const DB_NAME = "scrum-poker";
 
-export const UserRolesEnum = {
-  ADMIN: "ADMIN",
-  USER: "USER",
-};
-
-export const AvailableUserRoles = Object.keys(UserRolesEnum);
-
-export const GameEventEnum = {
+export const RoomEventEnum = {
   CONNECTED_EVENT: "connected",
   DISCONNECT_EVENT: "disconnect",
   JOIN_GAME_EVENT: "joinGame",
@@ -18,4 +11,4 @@ export const GameEventEnum = {
   SOCKET_ERROR_EVENT: "socketError",
 };
 
-export const AvailableGameEventEnum = Object.keys(GameEventEnum);
+export const AvailableRoomEventEnum = Object.keys(RoomEventEnum);
