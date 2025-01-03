@@ -34,4 +34,10 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.static("public"));
 app.use(cookieParser());
 
+// api routes
+import healthcheckRouter from "./routes/healthcheck.routes.js";
+
+// * healthcheck
+app.use("/api/v1/healthcheck", healthcheckRouter);
+
 export { httpServer };
