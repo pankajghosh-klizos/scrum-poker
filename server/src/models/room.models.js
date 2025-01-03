@@ -51,7 +51,7 @@ const roomSchema = new Schema(
       type: Number,
       default: 10,
     },
-    cardsOptions: {
+    votingSystem: {
       type: [Schema.Types.Mixed],
       default: null,
     },
