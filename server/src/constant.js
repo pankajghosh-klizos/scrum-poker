@@ -12,3 +12,11 @@ export const RoomEventEnum = {
 };
 
 export const AvailableRoomEventEnum = Object.keys(RoomEventEnum);
+
+export const RoomEventStatusEnum = {
+  WAITING: "waiting",
+  ONGOING: "ongoing",
+  FINISHED: "finished",
+};
+
+export const AvailableRoomEventStatusEnum = Object.keys(RoomEventStatusEnum);
