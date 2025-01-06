@@ -1,4 +1,4 @@
-export const DB_NAME = "sprint-card";
+export const DB_NAME = "scrum-poker";
 
 export const RoomEventEnum = Object.freeze({
   SOCKET_ERROR_EVENT: "socketError",
