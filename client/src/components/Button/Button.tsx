@@ -1,14 +1,21 @@
-import { ReactNode, MouseEventHandler } from "react";
+import { ButtonHTMLAttributes, FC } from "react";
 
-interface ButtonProps {
-  children: ReactNode;
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
-  onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
-const Button = ({ children, className = "", onClick }: ButtonProps) => {
+const Button: FC<ButtonProps> = ({
+  children = "Button",
+  type = "button",
+  className = "",
+  ...props
+}) => {
   return (
-    <button className={`btn ${className}`.trim()} onClick={onClick}>
+    <button
+      type={type}
+      className={`btn d-flex align-items-center justify-content-center gap-2 ${className}`}
+      {...props}
+    >
       {children}
     </button>
   );
