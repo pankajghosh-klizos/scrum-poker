@@ -7,7 +7,7 @@ const Home = () => {
 
   return (
     <Container>
-      <div className="d-flex flex-column align-items-center justify-content-center pt-4 pt-md-5 gap-4">
+      <div className="d-flex flex-column align-items-center justify-content-center pt-5 gap-3 gap-md-4">
         <h2 className="m-0 text-center display-2 lh-1">
           <span className="d-block fw-semibold">Scrum Poker</span>for teams
         </h2>
@@ -17,7 +17,7 @@ const Home = () => {
         </p>
 
         <Button
-          className="btn-primary px-5 py-md-2"
+          className="btn-primary px-5 py-md-2 mb-2"
           onClick={() => navigate("/new-game")}
         >
           Start a New Game
