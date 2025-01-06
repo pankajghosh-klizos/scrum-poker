@@ -1,0 +1,16 @@
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+  border-color: var(--bs-white);
+  border-top-color: var(--bs-blue);
+
+  &.spinner-border-sm {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  &.spinner-border-lg {
+    width: 4.5rem;
+    height: 4.5rem;
+  }
+}
