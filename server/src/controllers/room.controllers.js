@@ -66,6 +66,7 @@ const createRoom = asyncHandler(async (req, res) => {
 });
 
 const closeRoom = asyncHandler(async (req, res) => {
+  if(req.room)
   await Room.findByIdAndUpdate(
     req.room._id,
     {

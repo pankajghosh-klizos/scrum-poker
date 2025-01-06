@@ -2,30 +2,25 @@ import mongoose, { Schema } from "mongoose";
 import jwt from "jsonwebtoken";
 
 // Participant schema
-const participantSchema = Schema(
-  {
-    displayName: {
-      type: String,
-      required: true,
-    },
-    role: {
-      type: String,
-      enum: ["admin", "participant"],
-      default: "participant",
-    },
-    isCardSelected: {
-      type: Boolean,
-      default: false,
-    },
-    selectedCard: {
-      type: String,
-      default: null,
-    },
+const participantSchema = Schema({
+  displayName: {
+    type: String,
+    required: true,
   },
-  {
-    _id: false,
-  }
-);
+  role: {
+    type: String,
+    enum: ["admin", "participant"],
+    default: "participant",
+  },
+  isCardSelected: {
+    type: Boolean,
+    default: false,
+  },
+  selectedCard: {
+    type: String,
+    default: null,
+  },
+});
 
 // Room schema
 const roomSchema = Schema(
@@ -74,6 +69,7 @@ roomSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     {
       _id: this._id,
+      participantId: this.participants[0]._id,
       role: this.participants[0].role,
     },
     process.env.ACCESS_TOKEN_SECRET,

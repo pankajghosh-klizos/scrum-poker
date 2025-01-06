@@ -15,6 +15,10 @@ const verifyJWT = asyncHandler(async (req, _, next) => {
   try {
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
+    if (decodedToken?.role !== "admin") {
+      throw new ApiError(401, "Unauthorized request.");
+    }
+
     const room = await Room.findById(decodedToken?._id);
 
     if (!room) {
