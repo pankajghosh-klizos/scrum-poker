@@ -3,3 +3,7 @@
   top: -10px;
   left: 10px;
 }
+
+.input input:focus {
+  border-color: var(--bs-blue);
+}
