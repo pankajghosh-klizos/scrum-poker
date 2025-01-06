@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
-import { httpServer } from "./app.js";
 import connectDB from "./db/index.js";
+import { httpServer } from "./app.js";
 
 dotenv.config({
   path: "../.env",
@@ -12,10 +12,11 @@ dotenv.config({
  */
 
 const majorNodeVersion = +process.env.NODE_VERSION.split(".")[0] || 0;
+const port = process.env.PORT;
 
 const startServer = () => {
-  httpServer.listen(process.env.PORT || 8000, () => {
-    console.log("⚙️  Server is running on port: " + process.env.PORT);
+  httpServer.listen(port, () => {
+    console.info("⚙️  Server is running on port:", port);
   });
 };
 
@@ -26,4 +27,12 @@ if (majorNodeVersion >= 14) {
   } catch (error) {
     console.error("Mongo db connect error: ", error);
   }
+} else {
+  connectDB()
+    .then(() => {
+      startServer();
+    })
+    .catch((error) => {
+      console.error("Mongo db connect error: ", error);
+    });
 }

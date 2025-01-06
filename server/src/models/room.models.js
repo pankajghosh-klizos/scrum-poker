@@ -1,66 +1,84 @@
 import mongoose, { Schema } from "mongoose";
-import {
-  RoomEventStatusEnum,
-  AvailableRoomEventStatusEnum,
-} from "../constant.js";
+import jwt from "jsonwebtoken";
 
-const participantSchema = new Schema(
+// Participant schema
+const participantSchema = Schema(
   {
     displayName: {
       type: String,
       required: true,
-      lowercase: true,
-      trim: true,
     },
-    vote: {
-      type: Schema.Types.Mixed,
+    role: {
+      type: String,
+      enum: ["admin", "participant"],
+      default: "participant",
+    },
+    isCardSelected: {
+      type: Boolean,
+      default: false,
+    },
+    selectedCard: {
+      type: String,
       default: null,
     },
   },
-  { _id: false }
+  {
+    _id: false,
+  }
 );
 
-const roomSchema = new Schema(
+// Room schema
+const roomSchema = Schema(
   {
-    roomCode: {
+    roomId: {
       type: String,
-      unique: true,
       required: true,
-      trim: true,
+      index: true,
     },
     gameName: {
       type: String,
       required: true,
     },
-    admin: participantSchema,
-    participants: [participantSchema],
-    isCardRevealed: {
-      type: Boolean,
-      default: false,
-    },
-    average: {
-      type: Number,
-      default: 0,
-    },
-    status: {
+    votingSystem: {
       type: String,
-      enum: [AvailableRoomEventStatusEnum],
-      default: RoomEventStatusEnum.WAITING,
+      required: true,
     },
     maxParticipants: {
       type: Number,
       default: 10,
     },
-    votingSystem: {
-      type: [Schema.Types.Mixed],
-      default: null,
+    participants: {
+      type: [participantSchema],
+      default: [],
     },
-    currentRound: {
+    status: {
+      type: String,
+      enum: ["waiting", "ongoing", "finished"],
+      default: "waiting",
+    },
+    isVotingAgain: {
+      type: Boolean,
+      default: false,
+    },
+    roundCount: {
       type: Number,
-      default: 1,
+      default: 0,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
+
+roomSchema.methods.generateAccessToken = function () {
+  return jwt.sign(
+    {
+      _id: this._id,
+      role: this.participants[0].role,
+    },
+    process.env.ACCESS_TOKEN_SECRET,
+    { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
+  );
+};
 
 export const Room = mongoose.model("Room", roomSchema);

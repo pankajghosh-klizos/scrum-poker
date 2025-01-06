@@ -1,6 +1,7 @@
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import { initializeSocketIO } from "./socket/index.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
@@ -18,7 +19,9 @@ const io = new Server(httpServer, {
 
 app.set("io", io);
 
-// global middlewares
+initializeSocketIO(io);
+
+// global middleware
 app.use(
   cors({
     origin:
@@ -31,13 +34,16 @@ app.use(
 
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
-app.use(express.static("public"));
 app.use(cookieParser());
 
-// api routes
+// * api routes
 import healthcheckRouter from "./routes/healthcheck.routes.js";
+import roomRouter from "./routes/room.routes.js";
 
 // * healthcheck
-app.use("/api/v1/healthcheck", healthcheckRouter);
+app.use("/api/v1/health", healthcheckRouter);
+
+// * room
+app.use("/api/v1/room", roomRouter);
 
 export { httpServer };
