@@ -4,22 +4,26 @@ import { ApiError } from "../utils/ApiError.js";
 import { Room } from "../models/room.models.js";
 
 const initializeSocketIO = (io) => {
-  io.on("connection", async (socket) => {
+  io.on(RoomEventEnum.CONNECTED_EVENT, async (socket) => {
     try {
       // Extract token from the Authorization header
-      const token = socket.handshake.headers?.authorization?.replace(
+      if (!socket.handshake.headers?.authorization) {
+        throw new ApiError(401, "Authorization token is missing.");
+      }
+      const token = socket.handshake.headers.authorization.replace(
         "Bearer ",
         ""
       );
 
-      if (!token) {
-        throw new ApiError(401, "Authorization token is missing.");
+      // Verify the token and decode the room ID
+      let decodedToken;
+      try {
+        decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+      } catch (err) {
+        throw new ApiError(401, "Invalid or expired token.");
       }
 
-      // Verify the token and decode the room ID
-      const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
       const room = await Room.findById(decodedToken?._id.toString());
-
       if (!room) {
         throw new ApiError(401, "Invalid access token or room not found.");
       }
@@ -31,7 +35,7 @@ const initializeSocketIO = (io) => {
 
       console.info(`User connected 🗼 room: ${room._id}`);
 
-      // Mounting the join room event
+      // Handle join room event
       socket.on(RoomEventEnum.JOIN_ROOM_EVENT, (roomId) => {
         console.log(`User joined the room 🤝. roomId: ${roomId}`);
         socket.join(roomId);
@@ -39,14 +43,15 @@ const initializeSocketIO = (io) => {
 
       // Handle disconnect event
       socket.on(RoomEventEnum.DISCONNECT_EVENT, () => {
-        console.info(`User disconnected 🚫 room: ${room._id}`);
-        socket.leave(room._id.toString());
+        console.info(`User disconnected 🚫 room: ${socket.room?._id}`);
+        if (socket.room) {
+          socket.leave(socket.room._id.toString());
+        }
       });
     } catch (error) {
-      socket.emit(
-        RoomEventEnum.SOCKET_ERROR_EVENT,
-        error?.message || "Something went wrong while connecting to the socket."
-      );
+      socket.emit("error", {
+        message: error?.message || "Socket connection failed.",
+      });
       console.error("Socket connection error:", error);
     }
   });
