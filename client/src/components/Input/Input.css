@@ -1,7 +1,8 @@
 .input label {
   position: absolute;
-  top: -10px;
+  top: -12px;
   left: 10px;
+  color: var(--bs-gray);
 }
 
 .input input:focus {
