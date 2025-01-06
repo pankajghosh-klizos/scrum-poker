@@ -27,7 +27,9 @@ const Home = () => {
           <img
             src={HomeBanner}
             alt="banner"
-            className="object-fit-cover w-100"
+            width="346px"
+            height="455px"
+            className="object-fit-cover h-100 w-100"
           />
         </div>
       </div>
