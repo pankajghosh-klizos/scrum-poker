@@ -114,12 +114,14 @@ const getRoom = asyncHandler(async (req, res) => {
 });
 
 const joinRoom = asyncHandler(async (req, res) => {
-  const { displayName, roomId } = req.body;
+  const { displayName } = req.body;
+  const { roomId } = req.params;
 
-  if (!displayName || !roomId) {
-    throw new ApiError(400, "All required fields must be provided.");
+  if (!displayName) {
+    throw new ApiError(400, "Display name is required.");
   }
 
+  // Find the room by roomId from the URL parameters
   const room = await Room.findOne({ roomId });
 
   if (!room) {
@@ -130,18 +132,16 @@ const joinRoom = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Room has already been closed.");
   }
 
+  // Define the participant
   const participant = {
     displayName,
     role: "participant",
   };
 
+  // Update the room by adding the new participant
   const updatedRoom = await Room.findByIdAndUpdate(
     room._id,
-    {
-      $push: {
-        participants: participant,
-      },
-    },
+    { $push: { participants: participant } },
     { new: true }
   );
 
@@ -149,14 +149,17 @@ const joinRoom = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Something went wrong while joining the room.");
   }
 
-  const { accessToken } = await generateAccessToken(room._id);
+  // Generate an access token for the participant
+  const { accessToken } = await generateAccessToken(updatedRoom._id);
 
+  // Set the access token in a cookie
   const options = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     maxAge: 3600000, // 1 hour in milliseconds
   };
 
+  // Respond with the updated room data
   return res
     .status(200)
     .cookie("accessToken", accessToken, options)
