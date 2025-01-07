@@ -113,4 +113,59 @@ const getRoom = asyncHandler(async (req, res) => {
   );
 });
 
-export { createRoom, closeRoom, getRoom };
+const joinRoom = asyncHandler(async (req, res) => {
+  const { displayName, roomId } = req.body;
+
+  if (!displayName || !roomId) {
+    throw new ApiError(400, "All required fields must be provided.");
+  }
+
+  const room = await Room.findOne({ roomId });
+
+  if (!room) {
+    throw new ApiError(404, "Room not found.");
+  }
+
+  if (room.status === "finished") {
+    throw new ApiError(400, "Room has already been closed.");
+  }
+
+  const participant = {
+    displayName,
+    role: "participant",
+  };
+
+  const updatedRoom = await Room.findByIdAndUpdate(
+    room._id,
+    {
+      $push: {
+        participants: participant,
+      },
+    },
+    { new: true }
+  );
+
+  if (!updatedRoom) {
+    throw new ApiError(500, "Something went wrong while joining the room.");
+  }
+
+  const { accessToken } = await generateAccessToken(room._id);
+
+  const options = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 3600000, // 1 hour in milliseconds
+  };
+
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .json(
+      new ApiResponse(200, "Room joined successfully.", {
+        roomId: updatedRoom.roomId,
+        accessToken,
+      })
+    );
+});
+
+export { createRoom, closeRoom, getRoom, joinRoom };
