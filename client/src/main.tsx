@@ -19,7 +19,7 @@ createRoot(document.getElementById("root")!).render(
             <Route path="new-game" element={<NewGame />} />
 
             <Route
-              path="room/:roomId"
+              path="play"
               element={
                 <ProtectedRoute>
                   <SocketProvider>

@@ -43,13 +43,13 @@ const NewGame = () => {
       }
 
       // Extract necessary data
-      const { accessToken, roomId } = response.data.data;
+      const { accessToken } = response.data.data;
 
       // Save token and update state
       await localforage.setItem("accessToken", accessToken);
 
       // Navigate to the room
-      navigate(`/room/${roomId}`, { replace: true });
+      navigate("/play", { replace: true });
     } catch (error) {
       // Handle any unexpected errors
       console.error("Error creating room:", error);
