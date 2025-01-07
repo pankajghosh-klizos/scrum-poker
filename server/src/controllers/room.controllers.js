@@ -59,7 +59,7 @@ const createRoom = asyncHandler(async (req, res) => {
     .cookie("accessToken", accessToken, options)
     .json(
       new ApiResponse(201, "Room created successfully.", {
-        room: room,
+        roomId: room.roomId,
         accessToken,
       })
     );
