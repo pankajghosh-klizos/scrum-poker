@@ -1,9 +1,13 @@
 import { Link, useLocation, useNavigate } from "react-router";
-import { Button, Container } from "../../components";
+import { Button, Container, CloseRoomBtn } from "../../components";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Correct useSelector usage
+  const participant = useSelector((state: any) => state.participant);
 
   return (
     <header className="border-bottom border-light-subtle w-100">
@@ -22,6 +26,8 @@ const Header = () => {
               Start New Game
             </Button>
           )}
+
+          {participant?.role === "admin" && <CloseRoomBtn />}
         </nav>
       </Container>
     </header>
