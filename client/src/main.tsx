@@ -7,6 +7,7 @@ import store from "./store/store.ts";
 import { ProtectedRoute } from "./components/index.ts";
 import { Root, Home, NewGame, PlayGame } from "./pages/index.ts";
 import "./index.css";
+import { SocketProvider } from "./context/SocketContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -21,7 +22,9 @@ createRoot(document.getElementById("root")!).render(
               path="room/:roomId"
               element={
                 <ProtectedRoute>
-                  <PlayGame />
+                  <SocketProvider>
+                    <PlayGame />
+                  </SocketProvider>
                 </ProtectedRoute>
               }
             />
