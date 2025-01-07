@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import { Provider } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
 import store from "./store/store.ts";
+import { ProtectedRoute } from "./components/index.ts";
 import { Root, Home, NewGame, PlayGame } from "./pages/index.ts";
 import "./index.css";
 
@@ -15,7 +16,15 @@ createRoot(document.getElementById("root")!).render(
           <Route element={<Root />}>
             <Route index element={<Home />} />
             <Route path="new-game" element={<NewGame />} />
-            <Route path="room/:roomId" element={<PlayGame />} />
+
+            <Route
+              path="room/:roomId"
+              element={
+                <ProtectedRoute>
+                  <PlayGame />
+                </ProtectedRoute>
+              }
+            />
           </Route>
         </Routes>
       </Provider>

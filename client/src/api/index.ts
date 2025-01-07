@@ -35,4 +35,8 @@ const closeRoom = () => {
   return apiClient.post("/api/v1/room/close");
 };
 
-export { createRoom, closeRoom };
+const getRoom = () => {
+  return apiClient.get("/api/v1/room/get-room");
+};
+
+export { createRoom, closeRoom, getRoom };
