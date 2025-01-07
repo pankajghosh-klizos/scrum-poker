@@ -142,6 +142,7 @@ const joinRoom = asyncHandler(async (req, res) => {
   const updatedRoom = await Room.findByIdAndUpdate(
     room._id,
     { $push: { participants: participant } },
+    { $set: { status: "ongoing" } },
     { new: true }
   );
 
