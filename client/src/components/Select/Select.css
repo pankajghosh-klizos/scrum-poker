@@ -4,3 +4,7 @@
   left: 10px;
   color: var(--bs-gray);
 }
+
+.select select:focus {
+  border-color: var(--bs-blue);
+}
