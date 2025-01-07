@@ -89,13 +89,7 @@ const closeRoom = asyncHandler(async (req, res) => {
 });
 
 const getRoom = asyncHandler(async (req, res) => {
-  if (!req.room) {
-    throw new ApiError(404, "Room not found.");
-  }
-
-  const room = await Room.findById(req.room._id);
-
-  if (room.status === "finished") {
+  if (req.room.status === "finished") {
     const options = {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -107,9 +101,16 @@ const getRoom = asyncHandler(async (req, res) => {
       .json(new ApiResponse(200, "Room closed."));
   }
 
-  return res
-    .status(200)
-    .json(new ApiResponse(200, "Room found.", { room: room }));
+  const currentParticipant = req.room.participants.find(
+    (participant) => participant._id.toString() === req.participantId
+  );
+
+  return res.status(200).json(
+    new ApiResponse(200, "Room found.", {
+      room: req.room,
+      participant: currentParticipant,
+    })
+  );
 });
 
 export { createRoom, closeRoom, getRoom };
