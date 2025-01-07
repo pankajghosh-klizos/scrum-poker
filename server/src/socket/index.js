@@ -1,55 +1,76 @@
-import { RoomEventEnum } from "../constants.js";
-import jwt from "jsonwebtoken";
-import { ApiError } from "../utils/ApiError.js";
-import { Room } from "../models/room.models.js";
 import cookie from "cookie";
+import jwt from "jsonwebtoken";
+import { Room } from "../models/room.models.js";
+import { ApiError } from "../utils/ApiError.js";
+import { RoomEventEnum } from "../constants.js";
+
+const mountJoinRoomEvent = (socket) => {
+  socket.on(RoomEventEnum.JOIN_ROOM_EVENT, (roomId) => {
+    console.log(`User joined the room 🤝. roomId: ${roomId}`);
+    socket.join(roomId);
+  });
+};
 
 const initializeSocketIO = (io) => {
-  io.on(RoomEventEnum.CONNECTED_EVENT, async (socket) => {
+  io.on("connection", async (socket) => {
     try {
+      // Parse the token from cookies or handshake.auth
       const cookies = cookie.parse(socket.handshake.headers?.cookie || "");
-
-      let token = cookies?.accessToken;
-
-      if (!token) {
-        token = socket.handshake.auth?.token;
-      }
+      const token = cookies.accessToken || socket.handshake.auth?.token;
 
       if (!token) {
-        throw new ApiError(401, "Un-authorized handshake. Token is missing");
+        throw new ApiError(401, "Unauthorized handshake. Token is missing.");
       }
 
-      const { roomId } = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+      // Verify the JWT token
+      const { roomId, participantId } = jwt.verify(
+        token,
+        process.env.ACCESS_TOKEN_SECRET
+      );
 
+      // Find the room by roomId
       const room = await Room.findOne({ roomId });
-
       if (!room) {
-        throw new ApiError(401, "Invalid access token or room not found.");
+        throw new ApiError(404, "Room not found.");
       }
 
-      // Attach room to socket and join the room
-      socket.room = room;
-      socket.join(room._id.toString());
-      socket.emit(RoomEventEnum.CONNECTED_EVENT);
+      // Find the participant in the room
+      const participant = room.participants.find(
+        (participant) => participant._id.toString() === participantId
+      );
 
-      console.info(`User connected 🗼 room: ${room._id}`);
+      if (!participant) {
+        throw new ApiError(404, "Participant not found.");
+      }
 
-      // Handle join room event
-      socket.on(RoomEventEnum.JOIN_ROOM_EVENT, (roomId) => {
-        console.log(`User joined the room 🤝. roomId: ${roomId}`);
-        socket.join(roomId);
+      // Store participant data in socket
+      socket.data.participant = participant;
+
+      // Join the participant to their own room
+      const currentParticipantId = participant._id.toString();
+      socket.join(currentParticipantId);
+      socket.emit(RoomEventEnum.CONNECTED_EVENT, {
+        message: "Successfully connected.",
+        participantId: currentParticipantId,
       });
 
-      // Handle disconnect event
+      console.info("User connected 🗼. participantId:", currentParticipantId);
+
+      // Mount room events
+      mountJoinRoomEvent(socket);
+
+      // Handle disconnection
       socket.on(RoomEventEnum.DISCONNECT_EVENT, () => {
-        console.info(`User disconnected 🚫 room: ${socket.room?._id}`);
-        if (socket.room) {
-          socket.leave(socket.room._id.toString());
-        }
+        console.info(
+          "User disconnected 🚫. participantId:",
+          currentParticipantId
+        );
+        socket.leave(currentParticipantId);
       });
     } catch (error) {
-      socket.emit("error", {
-        message: error?.message || "Socket connection failed.",
+      socket.emit(RoomEventEnum.SOCKET_ERROR_EVENT, {
+        message:
+          error instanceof ApiError ? error.message : "Internal server error.",
       });
       console.error("Socket connection error:", error);
     }

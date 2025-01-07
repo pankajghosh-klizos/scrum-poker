@@ -12,7 +12,10 @@ const httpServer = createServer(app);
 const io = new Server(httpServer, {
   pingTimeout: 60000,
   cors: {
-    origin: process.env.CORS_ORIGIN,
+    origin:
+      process.env.CORS_ORIGIN == "*"
+        ? "*"
+        : process.env.CORS_ORIGIN?.split(", "),
     credentials: true,
   },
 });
