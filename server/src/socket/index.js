@@ -2,28 +2,27 @@ import { RoomEventEnum } from "../constants.js";
 import jwt from "jsonwebtoken";
 import { ApiError } from "../utils/ApiError.js";
 import { Room } from "../models/room.models.js";
+import cookie from "cookie";
 
 const initializeSocketIO = (io) => {
   io.on(RoomEventEnum.CONNECTED_EVENT, async (socket) => {
     try {
-      // Extract token from the Authorization header
-      if (!socket.handshake.headers?.authorization) {
-        throw new ApiError(401, "Authorization token is missing.");
-      }
-      const token = socket.handshake.headers.authorization.replace(
-        "Bearer ",
-        ""
-      );
+      const cookies = cookie.parse(socket.handshake.headers?.cookie || "");
 
-      // Verify the token and decode the room ID
-      let decodedToken;
-      try {
-        decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-      } catch (err) {
-        throw new ApiError(401, "Invalid or expired token.");
+      let token = cookies?.accessToken;
+
+      if (!token) {
+        token = socket.handshake.auth?.token;
       }
 
-      const room = await Room.findById(decodedToken?._id.toString());
+      if (!token) {
+        throw new ApiError(401, "Un-authorized handshake. Token is missing");
+      }
+
+      const { roomId } = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+      const room = await Room.findOne({ roomId });
+
       if (!room) {
         throw new ApiError(401, "Invalid access token or room not found.");
       }
