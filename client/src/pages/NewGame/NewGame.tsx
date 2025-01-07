@@ -4,10 +4,7 @@ import { createRoom } from "../../api";
 import { Button, Container, Input, Select, Loader } from "../../components";
 import toast from "react-hot-toast";
 import localforage from "localforage";
-import { useDispatch } from "react-redux";
-import { setRoom } from "../../store/slices/room.slice";
 import { useNavigate } from "react-router";
-import { setParticipant } from "../../store/slices/participant.slice";
 
 interface FormData {
   displayName: string;
@@ -16,7 +13,6 @@ interface FormData {
 }
 
 const NewGame = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -47,19 +43,13 @@ const NewGame = () => {
       }
 
       // Extract necessary data
-      const { accessToken, room } = response.data.data;
+      const { accessToken, roomId } = response.data.data;
 
       // Save token and update state
       await localforage.setItem("accessToken", accessToken);
-      dispatch(setRoom(room));
-
-      const currentParticipant =
-        room.participants[room.participants.length - 1];
-      dispatch(setParticipant(currentParticipant));
 
       // Navigate to the room
-      navigate(`/room/${room?.roomId}`, { replace: true });
-      toast.success(`Welcome! ${currentParticipant?.displayName}`);
+      navigate(`/room/${roomId}`, { replace: true });
     } catch (error) {
       // Handle any unexpected errors
       console.error("Error creating room:", error);
