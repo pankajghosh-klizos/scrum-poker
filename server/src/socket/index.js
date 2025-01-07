@@ -16,7 +16,15 @@ const initializeSocketIO = (io) => {
     try {
       // Parse the token from cookies or handshake.auth
       const cookies = cookie.parse(socket.handshake.headers?.cookie || "");
-      const token = cookies.accessToken || socket.handshake.auth?.token;
+      let token = cookies?.accessToken;
+
+      if (!token || typeof token !== "string") {
+        token = socket.handshake.auth?.token;
+      }
+
+      if (!token || typeof token !== "string") {
+        throw new Error("Invalid or missing JWT token.");
+      }
 
       if (!token) {
         throw new ApiError(401, "Unauthorized handshake. Token is missing.");

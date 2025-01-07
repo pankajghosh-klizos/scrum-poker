@@ -10,7 +10,7 @@ import { verifyJWT } from "../middlewares/auth.middlewares.js";
 const router = Router();
 
 router.route("/create").post(createRoom);
-router.route("/join").put(joinRoom);
+router.route("/:roomId/join").put(joinRoom);
 router.route("/close").post(verifyJWT, closeRoom);
 router.route("/get-room").get(verifyJWT, getRoom);
 
