@@ -13,4 +13,9 @@
     width: 4.5rem;
     height: 4.5rem;
   }
+
+  &.spinner-border-revert {
+    border-color: var(--bs-blue);
+    border-top-color: var(--bs-white);
+  }
 }

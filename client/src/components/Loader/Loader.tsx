@@ -4,9 +4,15 @@ import "./Loader.css";
 interface LoaderProps extends HTMLAttributes<HTMLDivElement> {
   className?: string;
   size?: "small" | "medium" | "large";
+  revert?: boolean;
 }
 
-const Loader = ({ className = "", size = "medium", ...props }: LoaderProps) => {
+const Loader = ({
+  className = "",
+  size = "medium",
+  revert,
+  ...props
+}: LoaderProps) => {
   const sizeClass = {
     small: "spinner-border-sm",
     medium: "",
@@ -15,7 +21,9 @@ const Loader = ({ className = "", size = "medium", ...props }: LoaderProps) => {
 
   return (
     <div
-      className={`spinner-border text-primary ${sizeClass} ${className}`.trim()}
+      className={`spinner-border text-primary ${sizeClass} ${className} ${
+        revert ? "spinner-border-revert" : ""
+      }`.trim()}
       aria-live="polite"
       aria-atomic="true"
       {...props}
