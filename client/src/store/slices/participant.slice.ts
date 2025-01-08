@@ -1,19 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  room: null,
+  participant: null,
 };
 
-const roomSlice = createSlice({
-  name: "room",
+const participantSlice = createSlice({
+  name: "participant",
   initialState,
   reducers: {
-    setRoom: (state, action) => {
-      state.room = action.payload;
+    setParticipant: (state, action) => {
+      state.participant = action.payload;
     },
-    clearRoom: () => initialState,
+
+    clearParticipant: () => initialState,
   },
 });
 
-export default roomSlice.reducer;
-export const { setRoom, clearRoom } = roomSlice.actions;
+export default participantSlice.reducer;
+export const { setParticipant, clearParticipant } = participantSlice.actions;

@@ -2,12 +2,12 @@ import localforage from "localforage";
 import Loader from "../Loader/Loader";
 import Button from "./Button";
 import { clearRoom } from "../../store/slices/room.slice";
-import { clearParticipant } from "../../store/slices/participant.slice";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { leaveRoom } from "../../api";
+import { clearParticipant } from "../../store/slices/participant.slice";
 
 const LeaveRoomBtn = () => {
   const navigate = useNavigate();
