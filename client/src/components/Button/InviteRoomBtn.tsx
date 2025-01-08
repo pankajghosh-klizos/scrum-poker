@@ -3,12 +3,12 @@ import Button from "./Button";
 import toast from "react-hot-toast";
 
 const InviteRoomBtn = () => {
-  const { roomId } = useSelector((state: any) => state.room);
+  const { room } = useSelector((state: any) => state.room);
   const baseUrl = window.location.origin;
 
   const handleInviteRoom = async () => {
     await navigator.clipboard
-      .writeText(`${baseUrl}/join/${roomId}`)
+      .writeText(`${baseUrl}/join/${room.roomId}`)
       .then(() => {
         toast.success("Invite link copied.");
       });
