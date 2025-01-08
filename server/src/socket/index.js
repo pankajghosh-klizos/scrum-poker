@@ -4,30 +4,19 @@ import { Room } from "../models/room.models.js";
 import { ApiError } from "../utils/ApiError.js";
 import { RoomEventEnum } from "../constants.js";
 
-const mountJoinRoomEvent = (socket) => {
-  socket.on(RoomEventEnum.JOIN_ROOM_EVENT, (roomId) => {
-    console.log(`User joined the room 🤝. roomId: ${roomId}`);
-    socket.join(roomId);
-  });
-};
-
 const initializeSocketIO = (io) => {
   io.on("connection", async (socket) => {
     try {
-      // Parse the token from cookies or handshake.auth
       const cookies = cookie.parse(socket.handshake.headers?.cookie || "");
+
       let token = cookies?.accessToken;
 
-      if (!token || typeof token !== "string") {
+      if (!token) {
         token = socket.handshake.auth?.token;
       }
 
-      if (!token || typeof token !== "string") {
-        throw new Error("Invalid or missing JWT token.");
-      }
-
       if (!token) {
-        throw new ApiError(401, "Unauthorized handshake. Token is missing.");
+        throw new ApiError(401, "Un-authorized handshake. Token is missing");
       }
 
       // Verify the JWT token
@@ -51,29 +40,17 @@ const initializeSocketIO = (io) => {
         throw new ApiError(404, "Participant not found.");
       }
 
-      // Store participant data in socket
-      socket.data.participant = participant;
+      socket.join(room.roomId);
 
-      // Join the participant to their own room
-      const currentParticipantId = participant._id.toString();
-      socket.join(currentParticipantId);
-      socket.emit(RoomEventEnum.CONNECTED_EVENT, {
-        message: "Successfully connected.",
-        participantId: currentParticipantId,
-      });
+      console.info(
+        `User ${participant.displayName} joined room ${room.roomId}`
+      );
 
-      console.info("User connected 🗼. participantId:", currentParticipantId);
-
-      // Mount room events
-      mountJoinRoomEvent(socket);
-
-      // Handle disconnection
-      socket.on(RoomEventEnum.DISCONNECT_EVENT, () => {
+      socket.on("disconnect", () => {
         console.info(
-          "User disconnected 🚫. participantId:",
-          currentParticipantId
+          `User ${participant.displayName} left room ${room.roomId}`
         );
-        socket.leave(currentParticipantId);
+        socket.leave(room.roomId);
       });
     } catch (error) {
       socket.emit(RoomEventEnum.SOCKET_ERROR_EVENT, {
