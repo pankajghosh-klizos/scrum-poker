@@ -1,8 +1,21 @@
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useSocket } from "../../context/SocketContext";
 
 const PlayGame = () => {
-  const room = useSelector((state: any) => state.room);
-  const participant = useSelector((state: any) => state.participant);
+  const { socket } = useSocket();
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on("connect", () => {
+      console.log(socket.connected); // true
+    });
+
+    socket.on("disconnect", () => {
+      console.log(socket.connected); // false
+    });
+  }, []);
+
   return <div>PlayGame</div>;
 };
 
