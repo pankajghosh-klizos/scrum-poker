@@ -32,7 +32,7 @@ const createRoom = (data: {
 };
 
 const closeRoom = () => {
-  return apiClient.post("/api/v1/room/close");
+  return apiClient.put("/api/v1/room/close");
 };
 
 const getRoom = () => {
