@@ -12,16 +12,15 @@ import {
 const getSocket = () => {
   const token = localforage.getItem("accessToken");
 
+  // Create a socket connection with the provided URI and authentication
   return socketio(import.meta.env.VITE_SOCKET_URL, {
     withCredentials: true,
-    auth: {
-      token,
-    },
+    auth: { token },
   });
 };
 
 const SocketContext = createContext<{
-  socket: ReturnType<typeof getSocket> | null;
+  socket: ReturnType<typeof socketio> | null;
 }>({
   socket: null,
 });

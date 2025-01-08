@@ -41,6 +41,7 @@ const initializeSocketIO = (io) => {
       }
 
       socket.join(room.roomId);
+      socket.emit(RoomEventEnum.CONNECTED_EVENT);
 
       console.info(
         `User ${participant.displayName} joined room ${room.roomId}`
