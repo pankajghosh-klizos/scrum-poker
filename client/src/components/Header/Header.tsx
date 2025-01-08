@@ -1,5 +1,10 @@
 import { Link, useLocation, useNavigate } from "react-router";
-import { Button, Container, CloseRoomBtn } from "../../components";
+import {
+  Button,
+  Container,
+  CloseRoomBtn,
+  InviteRoomBtn,
+} from "../../components";
 import { useSelector } from "react-redux";
 
 const Header = () => {
@@ -27,7 +32,12 @@ const Header = () => {
             </Button>
           )}
 
-          {participant?.role === "admin" && <CloseRoomBtn />}
+          {location.pathname === "/play" && (
+            <div className="d-flex gap-2">
+              <InviteRoomBtn />
+              {participant?.role === "admin" && <CloseRoomBtn />}
+            </div>
+          )}
         </nav>
       </Container>
     </header>
