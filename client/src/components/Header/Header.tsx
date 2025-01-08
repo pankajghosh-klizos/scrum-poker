@@ -11,9 +11,7 @@ import { useSelector } from "react-redux";
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
-  // Correct useSelector usage
-  const participant = useSelector((state: any) => state.participant);
+  const { participant } = useSelector((state: any) => state.participant);
 
   return (
     <header className="border-bottom border-light-subtle w-100">
