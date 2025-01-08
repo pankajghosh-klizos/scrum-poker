@@ -13,23 +13,29 @@ const verifyJWT = asyncHandler(async (req, _, next) => {
   }
 
   try {
-    const { roomId, participantId } = jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN_SECRET
-    );
+    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const { roomId, participantId } = decodedToken;
 
-    const room = await Room.findOne({ roomId });
+    const room = await Room.findOne({ roomId }).lean();
 
     if (!room) {
-      throw new ApiError(401, "Invalid access token");
+      throw new ApiError(401, "Invalid access token.");
+    }
+
+    const participant = room.participants?.find(
+      (participant) => participant._id.toString() === participantId
+    );
+
+    if (!participant) {
+      throw new ApiError(401, "Invalid access token.");
     }
 
     req.room = room;
-    req.participantId = participantId;
+    req.participant = participant;
 
     next();
   } catch (error) {
-    throw new ApiError(401, error?.message || "Invalid access token.");
+    next(new ApiError(401, error.message || "Invalid access token."));
   }
 });
 
