@@ -48,4 +48,8 @@ const joinRoom = (
   return apiClient.put(`/api/v1/room/${roomId}/join`, data);
 };
 
-export { createRoom, closeRoom, getRoom, joinRoom };
+const leaveRoom = () => {
+  return apiClient.post("/api/v1/room/leave");
+};
+
+export { createRoom, closeRoom, getRoom, joinRoom, leaveRoom };

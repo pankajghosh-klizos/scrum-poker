@@ -8,6 +8,7 @@ import Loader from "./Loader/Loader";
 import CloseRoomBtn from "./Button/CloseRoomBtn";
 import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
 import InviteRoomBtn from "./Button/InviteRoomBtn";
+import LeaveRoomBtn from "./Button/LeaveRoomBtn";
 
 export {
   Container,
@@ -20,4 +21,5 @@ export {
   CloseRoomBtn,
   ProtectedRoute,
   InviteRoomBtn,
+  LeaveRoomBtn,
 };

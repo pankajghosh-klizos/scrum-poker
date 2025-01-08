@@ -4,6 +4,7 @@ import {
   Container,
   CloseRoomBtn,
   InviteRoomBtn,
+  LeaveRoomBtn,
 } from "../../components";
 import { useSelector } from "react-redux";
 
@@ -36,6 +37,7 @@ const Header = () => {
             <div className="d-flex gap-2">
               <InviteRoomBtn />
               {participant?.role === "admin" && <CloseRoomBtn />}
+              {participant?.role === "participant" && <LeaveRoomBtn />}
             </div>
           )}
         </nav>
