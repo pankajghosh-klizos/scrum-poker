@@ -66,16 +66,23 @@ const createRoom = asyncHandler(async (req, res) => {
 });
 
 const closeRoom = asyncHandler(async (req, res) => {
-  if (req.room)
-    await Room.findByIdAndUpdate(
-      req.room._id,
-      {
-        $set: {
-          status: "finished",
-        },
+  if (req.participant.role !== "admin") {
+    throw new ApiError(403, "Only admin can close the room.");
+  }
+
+  const updatedRoom = await Room.findByIdAndUpdate(
+    req.room._id,
+    {
+      $set: {
+        status: "finished",
       },
-      { new: true }
-    );
+    },
+    { new: true }
+  );
+
+  if (!updatedRoom) {
+    throw new ApiError(500, "Something went wrong while closing the room.");
+  }
 
   const options = {
     httpOnly: true,
