@@ -42,7 +42,7 @@ const LeaveRoomBtn = () => {
       onClick={handleRoomLeave}
       disabled={loading}
     >
-      <span>Leave Game</span>
+      <span>Leave</span>
       {loading && <Loader size="small" />}
     </Button>
   );

@@ -42,7 +42,7 @@ const CloseRoomBtn = () => {
       onClick={handleRoomClose}
       disabled={loading}
     >
-      <span>End Game</span>
+      <span>End</span>
       {loading && <Loader size="small" />}
     </Button>
   );
