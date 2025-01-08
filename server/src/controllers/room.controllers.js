@@ -174,4 +174,36 @@ const joinRoom = asyncHandler(async (req, res) => {
     );
 });
 
-export { createRoom, closeRoom, getRoom, joinRoom };
+const leaveRoom = asyncHandler(async (req, res) => {
+  const { roomId } = req.params;
+
+  const room = await Room.findOne({ roomId });
+
+  if (!room) {
+    throw new ApiError(404, "Room not found.");
+  }
+
+  const updatedRoom = await Room.findByIdAndUpdate(
+    room._id,
+    {
+      $pull: { participants: { _id: req.participantId } },
+    },
+    { new: true }
+  );
+
+  if (!updatedRoom) {
+    throw new ApiError(500, "Something went wrong while leaving the room.");
+  }
+
+  const options = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+  };
+
+  return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .json(new ApiResponse(200, "Room left successfully."));
+});
+
+export { createRoom, closeRoom, getRoom, joinRoom, leaveRoom };
