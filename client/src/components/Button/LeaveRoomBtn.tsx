@@ -5,13 +5,14 @@ import { clearRoom } from "../../store/slices/room.slice";
 import { clearParticipant } from "../../store/slices/participant.slice";
 import toast from "react-hot-toast";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { leaveRoom } from "../../api";
 
 const LeaveRoomBtn = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { roomId } = useSelector((state: any) => state.room);
   const [loading, setLoading] = useState(false);
 
   const handleRoomLeave = async () => {

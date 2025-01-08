@@ -49,7 +49,7 @@ const joinRoom = (
 };
 
 const leaveRoom = () => {
-  return apiClient.post("/api/v1/room/leave");
+  return apiClient.delete(`/api/v1/room/leave`);
 };
 
 export { createRoom, closeRoom, getRoom, joinRoom, leaveRoom };
