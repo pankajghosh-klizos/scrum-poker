@@ -69,7 +69,7 @@ roomSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     {
       roomId: this.roomId,
-      participantId: this.participants[0]._id,
+      participantId: this.participants[this.participants.length - 1]._id,
     },
     process.env.ACCESS_TOKEN_SECRET,
     { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
