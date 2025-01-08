@@ -101,14 +101,10 @@ const getRoom = asyncHandler(async (req, res) => {
       .json(new ApiResponse(200, "Room closed."));
   }
 
-  const currentParticipant = req.room.participants.find(
-    (participant) => participant._id.toString() === req.participantId
-  );
-
   return res.status(200).json(
     new ApiResponse(200, "Room found.", {
       room: req.room,
-      participant: currentParticipant,
+      participant: req.participant,
     })
   );
 });
@@ -175,24 +171,21 @@ const joinRoom = asyncHandler(async (req, res) => {
 });
 
 const leaveRoom = asyncHandler(async (req, res) => {
-  const { roomId } = req.params;
-
-  const room = await Room.findOne({ roomId });
-
-  if (!room) {
-    throw new ApiError(404, "Room not found.");
-  }
-
   const updatedRoom = await Room.findByIdAndUpdate(
-    room._id,
+    req.room._id,
     {
-      $pull: { participants: { _id: req.participantId } },
+      $pull: { participants: { _id: req.participant._id } },
     },
     { new: true }
   );
 
   if (!updatedRoom) {
     throw new ApiError(500, "Something went wrong while leaving the room.");
+  }
+
+  if (updatedRoom.participants.length === 1) {
+    updatedRoom.status = "waiting";
+    await updatedRoom.save();
   }
 
   const options = {

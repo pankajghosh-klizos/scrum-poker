@@ -4,6 +4,7 @@ import {
   closeRoom,
   getRoom,
   joinRoom,
+  leaveRoom,
 } from "../controllers/room.controllers.js";
 import { verifyJWT } from "../middlewares/auth.middlewares.js";
 
@@ -11,7 +12,7 @@ const router = Router();
 
 router.route("/create").post(createRoom);
 router.route("/:roomId/join").put(joinRoom);
-router.route("/:roomId/leave").put(joinRoom);
+router.route("/leave").delete(verifyJWT, leaveRoom);
 router.route("/close").post(verifyJWT, closeRoom);
 router.route("/get-room").get(verifyJWT, getRoom);
 
