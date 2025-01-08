@@ -7,6 +7,7 @@ import Select from "./Select/Select";
 import Loader from "./Loader/Loader";
 import CloseRoomBtn from "./Button/CloseRoomBtn";
 import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
+import InviteRoomBtn from "./Button/InviteRoomBtn";
 
 export {
   Container,
@@ -18,4 +19,5 @@ export {
   Loader,
   CloseRoomBtn,
   ProtectedRoute,
+  InviteRoomBtn,
 };

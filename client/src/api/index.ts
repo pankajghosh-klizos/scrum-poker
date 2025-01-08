@@ -39,4 +39,13 @@ const getRoom = () => {
   return apiClient.get("/api/v1/room/get-room");
 };
 
-export { createRoom, closeRoom, getRoom };
+const joinRoom = (
+  roomId: string | undefined,
+  data: {
+    displayName: string;
+  }
+) => {
+  return apiClient.put(`/api/v1/room/${roomId}/join`, data);
+};
+
+export { createRoom, closeRoom, getRoom, joinRoom };
