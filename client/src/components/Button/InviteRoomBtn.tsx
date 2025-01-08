@@ -7,8 +7,6 @@ const InviteRoomBtn = () => {
   const baseUrl = window.location.origin;
 
   const handleInviteRoom = async () => {
-    console.log(`${baseUrl}/join/${roomId}`);
-
     await navigator.clipboard
       .writeText(`${baseUrl}/join/${roomId}`)
       .then(() => {
