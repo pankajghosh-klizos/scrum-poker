@@ -1,61 +1,46 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { createRoom } from "../../api";
 import { Button, Container, Input, Select, Loader } from "../../components";
 import toast from "react-hot-toast";
 import localforage from "localforage";
 import { useNavigate } from "react-router";
-
-interface FormData {
-  displayName: string;
-  gameName: string;
-  votingSystem: string;
-}
+import { NewGameFormData } from "../../interfaces";
 
 const NewGame = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  const votingOptions = [
-    {
-      value: "Fibonacci (0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, ?, ☕)",
-      label: "Fibonacci (0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, ?, ☕)",
-    },
-  ];
+  const votingOptions = useMemo(
+    () => [
+      {
+        value: "Fibonacci (0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, ?, ☕)",
+        label: "Fibonacci (0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, ?, ☕)",
+      },
+    ],
+    []
+  );
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>();
+  } = useForm<NewGameFormData>();
 
-  const handleRoomCreate: SubmitHandler<FormData> = async (formData) => {
+  const handleRoomCreate: SubmitHandler<NewGameFormData> = async (formData) => {
+    setLoading(true);
     try {
-      setLoading(true);
-
-      // Call the API
-      const response = await createRoom(formData);
-
-      // Validate the response
-      if (!response?.data?.success) {
-        toast.error(response?.data?.message || "Error while creating room.");
+      const data = await createRoom(formData);
+      if (!data.success) {
+        toast.error(data.message);
         return;
       }
-
-      // Extract necessary data
-      const { accessToken } = response.data.data;
-
-      // Save token and update state
-      await localforage.setItem("accessToken", accessToken);
-
-      // Navigate to the room
+      await localforage.setItem("accessToken", data.accessToken);
       navigate("/play", { replace: true });
     } catch (error) {
-      // Handle any unexpected errors
-      console.error("Error creating room:", error);
-      toast.error("An unexpected error occurred. Please try again.");
+      console.error("Failed to create room:", error);
+      toast.error("Failed to create room. Please try again.");
     } finally {
-      // Reset loading state
       setLoading(false);
     }
   };
@@ -77,10 +62,9 @@ const NewGame = () => {
             className="py-3 px-md-3 rounded-3"
             {...register("displayName", {
               required: "This field is required",
-              pattern: {
-                value: /^[^\s]+$/,
-                message: "Display name cannot contain spaces",
-              },
+              validate: (value) =>
+                value.trim() !== "" ||
+                "Display name cannot be empty or just spaces",
             })}
             errorMessage={errors.displayName?.message}
           />
@@ -91,10 +75,9 @@ const NewGame = () => {
             className="py-3 px-md-3 rounded-3"
             {...register("gameName", {
               required: "This field is required",
-              pattern: {
-                value: /^[^\s]+$/,
-                message: "Game's name cannot contain spaces",
-              },
+              validate: (value) =>
+                value.trim() !== "" ||
+                "Game's name cannot be empty or just spaces",
             })}
             errorMessage={errors.gameName?.message}
           />

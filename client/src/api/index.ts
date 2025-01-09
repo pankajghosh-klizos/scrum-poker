@@ -8,11 +8,9 @@ const apiClient = axios.create({
   timeout: 120000,
 });
 
-// Use interceptor to set Authorization header with token if available
 apiClient.interceptors.request.use(
   async (config) => {
     try {
-      // Explicitly specify that the token is a string
       const token = await localforage.getItem<string>("accessToken");
 
       if (typeof token === "string" && token) {
@@ -29,7 +27,6 @@ apiClient.interceptors.request.use(
     Promise.reject(new Error(error?.message || "Request interceptor error"))
 );
 
-// Centralized function for handling API errors
 const handleApiError = (error: unknown) => {
   let errorMessage = "An unexpected error occurred.";
 
@@ -46,7 +43,6 @@ const handleApiError = (error: unknown) => {
   return Promise.reject(new Error(errorMessage));
 };
 
-// Use async/await for cleaner syntax and better error handling
 const createRoom = async (data: {
   displayName: string;
   gameName: string;
