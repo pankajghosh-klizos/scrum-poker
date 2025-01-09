@@ -30,12 +30,12 @@ const NewGame = () => {
   const handleRoomCreate: SubmitHandler<NewGameFormData> = async (formData) => {
     setLoading(true);
     try {
-      const data = await createRoom(formData);
-      if (!data.success) {
-        toast.error(data.message);
+      const res = await createRoom(formData);
+      if (!res.success) {
+        toast.error(res.message);
         return;
       }
-      await localforage.setItem("accessToken", data.accessToken);
+      await localforage.setItem("accessToken", res.data.accessToken);
       navigate("/play", { replace: true });
     } catch (error) {
       console.error("Failed to create room:", error);
