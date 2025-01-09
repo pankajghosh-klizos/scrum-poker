@@ -19,21 +19,20 @@ const ProtectedRoute = ({ children }: Props) => {
 
   const validateRoom = async () => {
     try {
-      const response = await getRoom();
-      if (!response.data.success) {
-        localforage.removeItem("accessToken");
-        toast.error(response.data.message || "Error while validating room.");
+      const res = await getRoom();
+
+      if (!res.success) {
+        toast.error("Room not found.");
         navigate("/", { replace: true });
       }
 
-      const { room, participant } = response.data.data;
-
-      dispatch(setRoom(room));
-      dispatch(setParticipant(participant));
+      dispatch(setRoom(res.data?.room));
+      dispatch(setParticipant(res.data?.participant));
     } catch (error) {
       console.log("Error validate room.", error);
-      localforage.removeItem("accessToken");
+      toast.error("Error validate room.");
       navigate("/", { replace: true });
+      localforage.clear();
     } finally {
       setLoading(false);
     }

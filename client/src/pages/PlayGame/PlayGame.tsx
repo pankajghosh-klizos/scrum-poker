@@ -1,29 +1,23 @@
+import { useState } from "react";
 import { Container, Loader, PokerTable, VoteAgainBtn } from "../../components";
-import useSocket from "../../hooks/useSocket";
+import { useSelector } from "react-redux";
 
 const PlayGame = () => {
-  const { error, isConnected } = useSocket();
-
-  if (error) {
-    return (
-      <Container>
-        <p className="m-0 text-center">{error}</p>
-      </Container>
-    );
-  }
+  const { room } = useSelector((state: any) => state.room);
+  const { participant } = useSelector((state: any) => state.participant);
 
   return (
     <Container
       className="d-flex justify-content-center align-items-center flex-column gap-5"
       style={{ minHeight: "85vh" }}
     >
-      {isConnected ? (
+      {!room && !participant ? (
+        <Loader revert />
+      ) : (
         <>
           <PokerTable />
           <VoteAgainBtn />
         </>
-      ) : (
-        <Loader revert />
       )}
     </Container>
   );

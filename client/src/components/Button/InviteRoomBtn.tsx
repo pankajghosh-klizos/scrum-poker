@@ -7,13 +7,14 @@ const InviteRoomBtn = () => {
   const baseUrl = window.location.origin;
 
   const handleInviteRoom = async () => {
-    const url = `${baseUrl}/room/${room._id}`;
-    try {
-      await navigator.clipboard.writeText(url);
-      toast.success("Copied to clipboard");
-    } catch (error) {
-      toast.error("Failed to copy to clipboard");
-    }
+    const url = `${baseUrl}/join/${room._id}`;
+    const textField = document.createElement("textarea");
+    textField.innerText = url;
+    document.body.appendChild(textField);
+    textField.select();
+    document.execCommand("copy");
+    textField.remove();
+    toast.success("Invite link Copied");
   };
 
   return (
