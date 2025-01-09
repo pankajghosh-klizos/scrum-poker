@@ -5,9 +5,9 @@ const Participant: FC = ({ participant }: any) => {
   return (
     <div className="d-flex flex-column gap-2">
       <Card
-        className={`${participant?.role === "admin" ? "bg-success" : ""} ${
-          participant?.role === "participant" ? "bg-primary" : ""
-        }`}
+        className={`pe-none border-light-subtle ${
+          participant?.role === "admin" ? "bg-success" : ""
+        } ${participant?.role === "participant" ? "bg-primary" : ""}`}
       />
       {participant && (
         <p className="m-0 fs-5 text-center">
