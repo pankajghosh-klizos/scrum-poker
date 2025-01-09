@@ -39,9 +39,7 @@ const findRoomAndParticipant = async (roomId, participantId) => {
 const initializeSocketIO = (io) => {
   io.on("connection", async (socket) => {
     try {
-      // Retrieve the token from cookies or handshake
-      const cookies = cookie.parse(socket.handshake.headers?.cookie || "");
-      let token = cookies?.accessToken || socket.handshake.auth?.token;
+      let token = socket.handshake.auth?.token;
 
       if (!token)
         throw new ApiError(401, "Un-authorized handshake. Token is missing");

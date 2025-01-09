@@ -19,9 +19,7 @@ const getSocket = async (): Promise<ReturnType<typeof socketio>> => {
   try {
     const token = await localforage.getItem<string>("accessToken");
 
-    // Create a socket connection with the provided URI and authentication
     return socketio(import.meta.env.VITE_SOCKET_URL, {
-      withCredentials: true,
       auth: { token },
       transports: ["websocket"],
     });
