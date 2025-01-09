@@ -7,14 +7,14 @@ const InviteRoomBtn = () => {
   const { room } = useSelector((state: any) => state.room);
   const baseUrl = window.location.origin;
 
-  const handleInviteRoom = () => {
+  const handleInviteRoom = async () => {
     const clipboard = new ClipboardJS(".btn-invite", {
       text: () => `${baseUrl}/join/${room.roomId}`,
     });
 
     clipboard.on("success", () => {
       toast.success("Invite link copied.");
-      clipboard.destroy();
+      clipboard.destroy(); // Clean up after success
     });
 
     clipboard.on("error", () => {
