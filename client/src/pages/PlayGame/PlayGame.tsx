@@ -1,4 +1,10 @@
-import { Container, Loader, PokerTable, VoteAgainBtn } from "../../components";
+import {
+  CardDeck,
+  Container,
+  Loader,
+  PokerTable,
+  VoteAgainBtn,
+} from "../../components";
 import { useSelector } from "react-redux";
 
 const PlayGame = () => {
@@ -7,7 +13,7 @@ const PlayGame = () => {
 
   return (
     <Container
-      className="d-flex justify-content-center align-items-center flex-column gap-5"
+      className="d-flex justify-content-center align-items-center flex-column gap-5 py-5"
       style={{ minHeight: "85vh" }}
     >
       {!room && !participant ? (
@@ -15,6 +21,7 @@ const PlayGame = () => {
       ) : (
         <>
           <PokerTable />
+          <CardDeck />
           {participant.role === "admin" && <VoteAgainBtn />}
         </>
       )}

@@ -13,6 +13,7 @@ import VoteAgainBtn from "./Button/VoteAgainBtn";
 import PokerTable from "./PokerTable/PokerTable";
 import RevealBtn from "./Button/RevealBtn";
 import Card from "./Card/Card";
+import CardDeck from "./CardDeck/CardDeck";
 
 export {
   Container,
@@ -30,4 +31,5 @@ export {
   PokerTable,
   RevealBtn,
   Card,
+  CardDeck,
 };

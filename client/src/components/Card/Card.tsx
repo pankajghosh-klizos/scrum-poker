@@ -13,7 +13,7 @@ const Card: FC<CardProps> = ({ value, className, onClick, disabled }) => {
       <button
         onClick={onClick}
         disabled={disabled}
-        className={`btn border ${className}`}
+        className={`btn border fs-5 ${className}`}
         style={{ width: "60px", height: "90px", borderRadius: "8px" }}
       >
         {value}
