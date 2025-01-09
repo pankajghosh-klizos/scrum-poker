@@ -87,14 +87,9 @@ const closeRoom = asyncHandler(async (req, res) => {
 
 const getRoom = asyncHandler(async (req, res) => {
   if (req.room.status === "finished") {
-    const options = {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-    };
-
     return res
       .status(200)
-      .clearCookie("accessToken", options)
+      .clearCookie("accessToken", CookieOptions)
       .json(new ApiResponse(200, "Room closed."));
   }
 
