@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import localforage from "localforage";
 import config from "../config";
 
@@ -8,48 +8,97 @@ const apiClient = axios.create({
   timeout: 120000,
 });
 
+// Use interceptor to set Authorization header with token if available
 apiClient.interceptors.request.use(
-  async function (config) {
-    const token = await localforage.getItem("accessToken");
+  async (config) => {
+    try {
+      // Explicitly specify that the token is a string
+      const token = await localforage.getItem<string>("accessToken");
 
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      if (typeof token === "string" && token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } catch (error) {
+      console.error("Error fetching token from localforage:", error);
+      return Promise.reject(new Error("Failed to fetch access token."));
     }
 
     return config;
   },
-  function (error) {
-    return Promise.reject(error);
-  }
+  (error) =>
+    Promise.reject(new Error(error?.message || "Request interceptor error"))
 );
 
-const createRoom = (data: {
+// Centralized function for handling API errors
+const handleApiError = (error: unknown) => {
+  let errorMessage = "An unexpected error occurred.";
+
+  if (error instanceof AxiosError && error.response) {
+    console.error("API Error Response:", error.response.data);
+    errorMessage = error.response.data?.message || errorMessage;
+  } else if (error instanceof Error) {
+    console.error("Error in API request setup:", error.message);
+    errorMessage = error.message;
+  } else {
+    console.error("Unknown error type:", error);
+  }
+
+  return Promise.reject(new Error(errorMessage));
+};
+
+// Use async/await for cleaner syntax and better error handling
+const createRoom = async (data: {
   displayName: string;
   gameName: string;
   votingSystem: string;
 }) => {
-  return apiClient.post("/api/v1/room/create", data);
+  try {
+    const response = await apiClient.post("/api/v1/room/create", data);
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
 };
 
-const closeRoom = () => {
-  return apiClient.put("/api/v1/room/close");
+const closeRoom = async () => {
+  try {
+    const response = await apiClient.put("/api/v1/room/close");
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
 };
 
-const getRoom = () => {
-  return apiClient.get("/api/v1/room/get-room");
+const getRoom = async () => {
+  try {
+    const response = await apiClient.get("/api/v1/room/get-room");
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
 };
 
-const joinRoom = (
+const joinRoom = async (
   roomId: string | undefined,
   data: {
     displayName: string;
   }
 ) => {
-  return apiClient.put(`/api/v1/room/${roomId}/join`, data);
+  try {
+    const response = await apiClient.put(`/api/v1/room/${roomId}/join`, data);
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
 };
 
-const leaveRoom = () => {
-  return apiClient.delete(`/api/v1/room/leave`);
+const leaveRoom = async () => {
+  try {
+    const response = await apiClient.delete(`/api/v1/room/leave`);
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
 };
 
 export { createRoom, closeRoom, getRoom, joinRoom, leaveRoom };
