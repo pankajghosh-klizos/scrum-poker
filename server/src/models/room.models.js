@@ -51,9 +51,9 @@ const roomSchema = Schema(
       enum: ["waiting", "ongoing", "finished"],
       default: "waiting",
     },
-    isVotingAgain: {
-      type: Boolean,
-      default: false,
+    average: {
+      type: Number,
+      default: 0,
     },
     roundCount: {
       type: Number,
