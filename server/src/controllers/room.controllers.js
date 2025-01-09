@@ -143,17 +143,10 @@ const joinRoom = asyncHandler(async (req, res) => {
   // Generate an access token for the participant
   const { accessToken } = await generateAccessToken(updatedRoom._id);
 
-  // Set the access token in a cookie
-  const options = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 3600000, // 1 hour in milliseconds
-  };
-
   // Respond with the updated room data
   return res
     .status(200)
-    .cookie("accessToken", accessToken, options)
+    .cookie("accessToken", accessToken, CookieOptions)
     .json(
       new ApiResponse(200, "Room joined successfully.", {
         roomId: updatedRoom.roomId,
