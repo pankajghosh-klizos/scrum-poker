@@ -173,14 +173,9 @@ const leaveRoom = asyncHandler(async (req, res) => {
     await updatedRoom.save();
   }
 
-  const options = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-  };
-
   return res
     .status(200)
-    .clearCookie("accessToken", options)
+    .clearCookie("accessToken", CookieOptions)
     .json(new ApiResponse(200, "Room left successfully."));
 });
 
