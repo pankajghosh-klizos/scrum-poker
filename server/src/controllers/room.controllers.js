@@ -79,14 +79,9 @@ const closeRoom = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Something went wrong while closing the room.");
   }
 
-  const options = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-  };
-
   return res
     .status(200)
-    .clearCookie("accessToken", options)
+    .clearCookie("accessToken", CookieOptions)
     .json(new ApiResponse(200, "Room closed."));
 });
 
