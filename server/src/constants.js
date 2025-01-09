@@ -9,7 +9,8 @@ export const RoomEventEnum = Object.freeze({
 });
 
 export const CookieOptions = {
-  httpOnly: true, // Ensures the cookie is only accessible by the server
-  secure: process.env.NODE_ENV === "production", // Use secure cookies only in production (HTTPS)
-  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // 'none' for cross-site cookies in production, 'lax' for local development
+  httpOnly: true,
+  secure: true,
+  sameSite: "none",
+  partitioned: true,
 };
