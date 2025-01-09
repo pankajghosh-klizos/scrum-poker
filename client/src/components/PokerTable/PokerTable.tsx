@@ -1,18 +1,20 @@
+import { useSelector } from "react-redux";
 import Participant from "../Participant/Participant";
 import "./PokerTable.css";
 
 const PokerTable = () => {
+  const { room } = useSelector((state) => state.room);
   return (
     <div className="d-grid gap-3 gap-md-4">
       <div className="participants d-flex gap-3 gap-md-5 align-items-center justify-content-center">
-        <Participant />
-        <Participant />
-        <Participant />
-        <Participant />
+        <Participant participant={room?.participants[6]} />
+        <Participant participant={room?.participants[2]} />
+        <Participant participant={room?.participants[4]} />
+        <Participant participant={room?.participants[8]} />
       </div>
 
       <div className="d-flex gap-3 gap-md-5 align-items-center justify-content-center">
-        <Participant />
+        <Participant participant={room?.participants[0]} />
 
         <div
           className="poker-table d-flex align-items-center justify-content-center bg-primary-subtle rounded-4 p-5"
@@ -28,14 +30,14 @@ const PokerTable = () => {
           </p> */}
         </div>
 
-        <Participant />
+        <Participant participant={room?.participants[1]} />
       </div>
 
       <div className="participants d-flex gap-3 gap-md-5 align-items-center justify-content-center">
-        <Participant />
-        <Participant />
-        <Participant />
-        <Participant />
+        <Participant participant={room?.participants[9]} />
+        <Participant participant={room?.participants[3]} />
+        <Participant participant={room?.participants[5]} />
+        <Participant participant={room?.participants[7]} />
       </div>
     </div>
   );

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Container, Loader, PokerTable, VoteAgainBtn } from "../../components";
 import { useSelector } from "react-redux";
 
@@ -16,7 +15,7 @@ const PlayGame = () => {
       ) : (
         <>
           <PokerTable />
-          <VoteAgainBtn />
+          {participant.role === "admin" && <VoteAgainBtn />}
         </>
       )}
     </Container>
