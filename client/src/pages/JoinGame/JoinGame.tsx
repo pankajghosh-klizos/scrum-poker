@@ -5,10 +5,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import toast from "react-hot-toast";
 import localforage from "localforage";
 import { joinRoom } from "../../api";
-
-interface FormData {
-  displayName: string;
-}
+import { JoinGameFormData } from "../../interfaces";
 
 const JoinGame = () => {
   const navigate = useNavigate();
@@ -19,35 +16,22 @@ const JoinGame = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>();
+  } = useForm<JoinGameFormData>();
 
-  const handleRoomJoin: SubmitHandler<FormData> = async (formData) => {
+  const handleRoomJoin: SubmitHandler<JoinGameFormData> = async (formData) => {
+    setLoading(true);
     try {
-      setLoading(true);
-
-      // Call the API
-      const response = await joinRoom(roomId, formData);
-
-      // Validate the response
-      if (!response?.data?.success) {
-        toast.error(response?.data?.message || "Error while joining room.");
+      const res = await joinRoom(roomId, formData);
+      if (!res.success) {
+        toast.error(res.message);
         return;
       }
-
-      // Extract necessary data
-      const { accessToken } = response.data.data;
-
-      // Save token and update state
-      await localforage.setItem("accessToken", accessToken);
-
-      // Navigate to the room
+      await localforage.setItem("accessToken", res.data.accessToken);
       navigate("/play", { replace: true });
     } catch (error) {
-      // Handle any unexpected errors
-      console.error("Error joining room:", error);
-      toast.error("An unexpected error occurred. Please try again.");
+      console.error("Failed to join room:", error);
+      toast.error("Failed to join room. Please try again.");
     } finally {
-      // Reset loading state
       setLoading(false);
     }
   };

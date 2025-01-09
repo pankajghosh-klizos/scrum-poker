@@ -3,3 +3,7 @@ export interface NewGameFormData {
   gameName: string;
   votingSystem: string;
 }
+
+export interface JoinGameFormData {
+  displayName: string;
+}
