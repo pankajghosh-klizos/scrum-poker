@@ -3,6 +3,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 import { Room } from "../models/room.models.js";
 import { v4 as uuidv4 } from "uuid";
+import { CookieOptions } from "../constants.js";
 
 const generateAccessToken = async (roomId) => {
   try {
@@ -48,15 +49,9 @@ const createRoom = asyncHandler(async (req, res) => {
 
   const { accessToken } = await generateAccessToken(room._id);
 
-  const options = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 3600000, // 1 hour in milliseconds
-  };
-
   return res
     .status(201)
-    .cookie("accessToken", accessToken, options)
+    .cookie("accessToken", accessToken, CookieOptions)
     .json(
       new ApiResponse(201, "Room created successfully.", {
         roomId: room.roomId,
