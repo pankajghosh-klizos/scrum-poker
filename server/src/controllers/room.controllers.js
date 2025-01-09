@@ -51,7 +51,7 @@ const createRoom = asyncHandler(async (req, res) => {
 
   return res
     .status(201)
-    .cookie("accessToken", accessToken, CookieOptions)
+    .cookie("accessToken", accessToken, { ...CookieOptions, maxAge: 3600000 })
     .json(
       new ApiResponse(201, "Room created successfully.", {
         roomId: room.roomId,
@@ -146,7 +146,7 @@ const joinRoom = asyncHandler(async (req, res) => {
   // Respond with the updated room data
   return res
     .status(200)
-    .cookie("accessToken", accessToken, CookieOptions)
+    .cookie("accessToken", accessToken, { ...CookieOptions, maxAge: 3600000 })
     .json(
       new ApiResponse(200, "Room joined successfully.", {
         roomId: updatedRoom.roomId,
