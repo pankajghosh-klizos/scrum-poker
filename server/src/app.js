@@ -22,7 +22,7 @@ const io = new Server(httpServer, {
 
 app.set("io", io);
 
-initializeSocketIO(io);
+// initializeSocketIO(io);
 
 // global middleware
 app.use(

@@ -1,0 +1,10 @@
+@media screen and (min-width: 768px) {
+  .poker-table {
+    min-height: 200px;
+    min-width: 400px;
+  }
+
+  .participants {
+    gap: 5rem !important;
+  }
+}

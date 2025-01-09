@@ -2,7 +2,8 @@ import cookie from "cookie";
 import jwt from "jsonwebtoken";
 import { Room } from "../models/room.models.js";
 import { ApiError } from "../utils/ApiError.js";
-import { RoomEventEnum } from "../constants.js";
+
+const participants = {};
 
 const handleJwtError = (error) => {
   if (error instanceof jwt.TokenExpiredError) {
@@ -56,7 +57,11 @@ const initializeSocketIO = (io) => {
 
       // Join the room
       socket.join(room.gameName);
-      socket.emit(RoomEventEnum.CONNECTED_EVENT);
+      participants[socket.id] = participant;
+
+      io.in(room.gameName).emit("participants_update_event", {
+        participants: Object.values(participants),
+      });
 
       console.info(
         `User: ${participant.displayName} joined room: ${room.gameName}`
@@ -64,17 +69,18 @@ const initializeSocketIO = (io) => {
 
       // Handle disconnection
       socket.on("disconnect", () => {
-        console.info(
-          `User: ${participant.displayName} left room: ${room.gameName}`
+        delete participants[socket.id];
+        io.in(room.gameName).emit(
+          RoomEventEnum.PARTICIPANTS_UPDATE_EVENT,
+          Object.values(participants)
         );
-        socket.leave(room.gameName);
+      });
+
+      socket.emit("connected", {
+        message: "Connected successfully.",
       });
     } catch (error) {
-      console.error("Socket Error:", error); // Improved logging
-      socket.emit(RoomEventEnum.SOCKET_ERROR_EVENT, {
-        message:
-          error instanceof ApiError ? error.message : "Internal server error.",
-      });
+      socket.emit("socketError", { message: error.message });
     }
   });
 };

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import { setRoom } from "../../store/slices/room.slice";
 import { setParticipant } from "../../store/slices/participant.slice";
 import toast from "react-hot-toast";
+import localforage from "localforage";
 
 interface Props {
   children: ReactNode;
@@ -20,6 +21,7 @@ const ProtectedRoute = ({ children }: Props) => {
     try {
       const response = await getRoom();
       if (!response.data.success) {
+        localforage.removeItem("accessToken");
         toast.error(response.data.message || "Error while validating room.");
         navigate("/", { replace: true });
       }
@@ -30,6 +32,7 @@ const ProtectedRoute = ({ children }: Props) => {
       dispatch(setParticipant(participant));
     } catch (error) {
       console.log("Error validate room.", error);
+      localforage.removeItem("accessToken");
       navigate("/", { replace: true });
     } finally {
       setLoading(false);

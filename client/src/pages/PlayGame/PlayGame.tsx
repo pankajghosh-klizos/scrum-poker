@@ -1,28 +1,32 @@
-import { useEffect } from "react";
-import { useSocket } from "../../context/SocketContext";
+import { Container, Loader, PokerTable, VoteAgainBtn } from "../../components";
+import useSocket from "../../hooks/useSocket";
 
 const PlayGame = () => {
-  const { socket } = useSocket();
+  const { error, isConnected } = useSocket();
 
-  const CONNECTED_EVENT = "connected";
-  const DISCONNECT_EVENT = "disconnect";
+  if (error) {
+    return (
+      <Container>
+        <p className="m-0 text-center">{error}</p>
+      </Container>
+    );
+  }
 
-  const onConnect = () => {
-    console.log("connected");
-  };
-
-  const onDisconnect = () => {
-    console.log("disconnected");
-  };
-
-  useEffect(() => {
-    if (!socket) return;
-
-    socket.on(CONNECTED_EVENT, onConnect);
-    socket.on(DISCONNECT_EVENT, onDisconnect);
-  }, []);
-
-  return <div>PlayGame</div>;
+  return (
+    <Container
+      className="d-flex justify-content-center align-items-center flex-column gap-5"
+      style={{ minHeight: "85vh" }}
+    >
+      {isConnected ? (
+        <>
+          <PokerTable />
+          <VoteAgainBtn />
+        </>
+      ) : (
+        <Loader revert />
+      )}
+    </Container>
+  );
 };
 
 export default PlayGame;
