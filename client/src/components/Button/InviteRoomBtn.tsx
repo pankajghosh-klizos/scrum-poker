@@ -7,7 +7,7 @@ const InviteRoomBtn = () => {
   const baseUrl = window.location.origin;
 
   const handleInviteRoom = async () => {
-    const url = `${baseUrl}/join/${room._id}`;
+    const url = `${baseUrl}/join/${room.roomId}`;
     const textField = document.createElement("textarea");
     textField.innerText = url;
     document.body.appendChild(textField);
