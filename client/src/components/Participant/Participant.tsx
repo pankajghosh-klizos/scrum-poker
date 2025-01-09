@@ -1,7 +1,7 @@
 import { FC } from "react";
 import Card from "../Card/Card";
 
-const Participant: FC = ({ participant }) => {
+const Participant: FC = ({ participant }: any) => {
   return (
     <div className="d-flex flex-wrap justify-content-around">
       <Card />
