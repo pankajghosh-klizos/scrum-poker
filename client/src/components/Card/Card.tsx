@@ -1,6 +1,5 @@
 import { FC } from "react";
 import { FiCheckCircle } from "react-icons/fi";
-import { useSelector } from "react-redux";
 
 interface CardProps {
   value?: string;
