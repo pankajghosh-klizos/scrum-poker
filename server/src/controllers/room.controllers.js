@@ -231,6 +231,30 @@ const revealCard = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, "Card revealed."));
 });
 
+const voteAgain = asyncHandler(async (req, res) => {
+  const updatedRoom = await Room.findOneAndUpdate(
+    {
+      _id: req.room._id,
+      "participants._id": req.participant._id,
+    },
+    {
+      $set: {
+        average: 0,
+        isCardRevealed: false,
+        "participants.$[].selectedCard": null,
+        "participants.$[].isCardSelected": false,
+      },
+    },
+    { new: true }
+  );
+
+  if (!updatedRoom) {
+    throw new ApiError(500, "Something went wrong while voting again.");
+  }
+
+  return res.status(200).json(new ApiResponse(200, "Voted again."));
+});
+
 export {
   createRoom,
   closeRoom,
@@ -239,4 +263,5 @@ export {
   leaveRoom,
   selectCard,
   revealCard,
+  voteAgain,
 };

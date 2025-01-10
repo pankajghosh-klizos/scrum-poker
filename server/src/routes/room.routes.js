@@ -7,6 +7,7 @@ import {
   leaveRoom,
   selectCard,
   revealCard,
+  voteAgain,
 } from "../controllers/room.controllers.js";
 import { verifyJWT } from "../middlewares/auth.middlewares.js";
 
@@ -19,5 +20,6 @@ router.route("/close").put(verifyJWT, closeRoom);
 router.route("/get-room").get(verifyJWT, getRoom);
 router.route("/select").put(verifyJWT, selectCard);
 router.route("/reveal").put(verifyJWT, revealCard);
+router.route("/vote-again").put(verifyJWT, voteAgain);
 
 export default router;
