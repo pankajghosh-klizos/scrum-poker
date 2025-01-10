@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router";
 import Button from "./Button";
 import { useState } from "react";
 import { revealCard } from "../../api";
@@ -6,7 +5,6 @@ import toast from "react-hot-toast";
 import Loader from "../Loader/Loader";
 
 const RevealBtn = () => {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const handleRevealCards = async () => {
