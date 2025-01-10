@@ -217,7 +217,7 @@ const revealCard = asyncHandler(async (req, res) => {
     {
       $set: {
         average: average,
-        roundeCount: req.room.roundeCount + 1,
+        roundCount: req.room.roundCount + 1,
         isCardRevealed: true,
       },
     },
