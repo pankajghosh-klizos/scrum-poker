@@ -22,7 +22,9 @@ const PlayGame = () => {
         <>
           <PokerTable />
           <CardDeck />
-          {participant.role === "admin" && room.average > 0 && <VoteAgainBtn />}
+          {participant.role === "admin" && room.isCardRevealed && (
+            <VoteAgainBtn />
+          )}
         </>
       )}
     </Container>
