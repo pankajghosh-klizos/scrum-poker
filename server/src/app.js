@@ -1,25 +1,10 @@
 import express from "express";
 import { createServer } from "http";
-import { Server } from "socket.io";
-import { initializeSocketIO } from "./socket/index.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
 const app = express();
-
 const httpServer = createServer(app);
-
-const io = new Server(httpServer, {
-  pingTimeout: 60000,
-  cors: {
-    origin: process.env.CORS_ORIGIN,
-    credentials: true,
-  },
-});
-
-app.set("io", io);
-
-// initializeSocketIO(io);
 
 // global middleware
 app.use(
