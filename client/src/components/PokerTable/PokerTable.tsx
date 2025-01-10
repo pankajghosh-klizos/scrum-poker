@@ -3,7 +3,7 @@ import Participant from "../Participant/Participant";
 import "./PokerTable.css";
 
 const PokerTable = () => {
-  const { room } = useSelector((state) => state.room);
+  const { room } = useSelector((state: any) => state.room);
   return (
     <div className="d-grid gap-3 gap-md-4">
       <div className="participants d-flex gap-3 gap-md-5 align-items-center justify-content-center">

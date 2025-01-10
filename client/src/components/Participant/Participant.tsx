@@ -1,7 +1,12 @@
 import { FC } from "react";
 import Card from "../Card/Card";
+import { ParticipantData } from "../../interfaces";
 
-const Participant: FC = ({ participant }: any) => {
+interface ParticipantProps {
+  participant: ParticipantData;
+}
+
+const Participant: FC<ParticipantProps> = ({ participant }) => {
   return (
     <div className="d-flex flex-column gap-2">
       <Card
