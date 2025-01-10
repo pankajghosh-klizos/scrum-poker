@@ -7,9 +7,6 @@ const calculateAverage = (participants) => {
     )
     .map((participant) => Number(participant.selectedCard));
 
-  console.log(participants);
-  console.log(validVotes);
-
   if (participants.length === 0) return 0;
 
   const sum = validVotes.reduce((acc, vote) => acc + vote, 0);
