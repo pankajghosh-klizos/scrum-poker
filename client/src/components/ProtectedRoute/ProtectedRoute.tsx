@@ -30,7 +30,6 @@ const ProtectedRoute = ({ children }: Props) => {
       dispatch(setParticipant(res.data?.participant));
     } catch (error) {
       console.log("Error validate room.", error);
-      toast.error("Error validate room.");
       navigate("/", { replace: true });
       localforage.clear();
     } finally {
