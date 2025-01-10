@@ -179,4 +179,32 @@ const leaveRoom = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "Room left successfully."));
 });
 
-export { createRoom, closeRoom, getRoom, joinRoom, leaveRoom };
+const selectCard = asyncHandler(async (req, res) => {
+  const { card } = req.body;
+
+  if (!card) {
+    throw new ApiError(400, "Card is required.");
+  }
+
+  const updatedRoom = await Room.findOneAndUpdate(
+    {
+      _id: req.room._id,
+      "participants._id": req.participant._id,
+    },
+    {
+      $set: {
+        "participants.$.selectedCard": card,
+        "participants.$.isCardSelected": true,
+      },
+    },
+    { new: true }
+  );
+
+  if (!updatedRoom) {
+    throw new ApiError(500, "Something went wrong while selecting the card.");
+  }
+
+  return res.status(200).json(new ApiResponse(200, "Card selected."));
+});
+
+export { createRoom, closeRoom, getRoom, joinRoom, leaveRoom, selectCard };
