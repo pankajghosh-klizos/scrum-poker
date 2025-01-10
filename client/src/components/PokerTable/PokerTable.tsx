@@ -26,7 +26,9 @@ const PokerTable = () => {
           {!participant.isCardSelected && (
             <p className="m-0 text-muted fs-5 text-center">Pick your cards!</p>
           )}
-          {participant.role == "admin" && !room.isCardRevealed && <RevealBtn />}
+          {participant.role == "admin" && participant.isCardSelected && (
+            <RevealBtn />
+          )}
 
           {room.average > 0 && (
             <p className="m-0 fs-5 text-center">
