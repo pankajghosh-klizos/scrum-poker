@@ -16,16 +16,15 @@ const LeaveRoomBtn = () => {
 
   const handleRoomLeave = async () => {
     setLoading(true);
-
     try {
-      const response = await leaveRoom();
+      const res = await leaveRoom();
 
-      if (!response?.data?.success) {
-        toast.error(response?.data?.message || "Error while leaving room.");
+      if (!res?.success) {
+        toast.error("Error leaving room.");
         return;
       }
 
-      localforage.removeItem("accessToken");
+      localforage.clear();
       dispatch(clearRoom());
       dispatch(clearParticipant());
       navigate("/", { replace: true });
