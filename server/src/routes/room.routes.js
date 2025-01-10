@@ -6,6 +6,7 @@ import {
   joinRoom,
   leaveRoom,
   selectCard,
+  revealCard,
 } from "../controllers/room.controllers.js";
 import { verifyJWT } from "../middlewares/auth.middlewares.js";
 
@@ -17,5 +18,6 @@ router.route("/leave").delete(verifyJWT, leaveRoom);
 router.route("/close").put(verifyJWT, closeRoom);
 router.route("/get-room").get(verifyJWT, getRoom);
 router.route("/select").put(verifyJWT, selectCard);
+router.route("/reveal").put(verifyJWT, revealCard);
 
 export default router;

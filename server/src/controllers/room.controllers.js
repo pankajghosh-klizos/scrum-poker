@@ -4,6 +4,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { Room } from "../models/room.models.js";
 import { v4 as uuidv4 } from "uuid";
 import { CookieOptions } from "../constants.js";
+import calculateAverage from "../utils/calculateAverage.js";
 
 const generateAccessToken = async (roomId) => {
   try {
@@ -204,4 +205,38 @@ const selectCard = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, "Card selected."));
 });
 
-export { createRoom, closeRoom, getRoom, joinRoom, leaveRoom, selectCard };
+const revealCard = asyncHandler(async (req, res) => {
+  if (req.participant.role !== "admin") {
+    throw new ApiError(403, "Only admin can reveal the card.");
+  }
+
+  const average = calculateAverage(req.room.participants);
+
+  const updatedRoom = await Room.findByIdAndUpdate(
+    req.room._id,
+    {
+      $set: {
+        average: average,
+        roundeCount: req.room.roundeCount + 1,
+        isCardRevealed: true,
+      },
+    },
+    { new: true }
+  );
+
+  if (!updatedRoom) {
+    throw new ApiError(500, "Something went wrong while revealing the card.");
+  }
+
+  return res.status(200).json(new ApiResponse(200, "Card revealed."));
+});
+
+export {
+  createRoom,
+  closeRoom,
+  getRoom,
+  joinRoom,
+  leaveRoom,
+  selectCard,
+  revealCard,
+};

@@ -59,6 +59,10 @@ const roomSchema = Schema(
       type: Number,
       default: 0,
     },
+    isCardRevealed: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
