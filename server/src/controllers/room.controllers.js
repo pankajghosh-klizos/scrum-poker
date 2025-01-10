@@ -117,13 +117,15 @@ const joinRoom = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Room has already been closed.");
   }
 
-  // Define the participant
+  if (room.participants.length >= room.maxParticipants) {
+    throw new ApiError(400, "Room is full.");
+  }
+
   const participant = {
     displayName,
     role: "participant",
   };
 
-  // Update the room by adding the new participant
   const updatedRoom = await Room.findByIdAndUpdate(
     room._id,
     {
@@ -137,10 +139,8 @@ const joinRoom = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Something went wrong while joining the room.");
   }
 
-  // Generate an access token for the participant
   const { accessToken } = await generateAccessToken(updatedRoom._id);
 
-  // Respond with the updated room data
   return res
     .status(200)
     .cookie("accessToken", accessToken, { ...CookieOptions, maxAge: 3600000 })
