@@ -16,16 +16,15 @@ const CloseRoomBtn = () => {
 
   const handleRoomClose = async () => {
     setLoading(true);
-
     try {
-      const response = await closeRoom();
+      const res = await closeRoom();
 
-      if (!response?.data?.success) {
-        toast.error(response?.data?.message || "Error while closing room.");
+      if (!res?.success) {
+        toast.error("Error closing room.");
         return;
       }
 
-      localforage.removeItem("accessToken");
+      localforage.clear();
       dispatch(clearRoom());
       dispatch(clearParticipant());
       navigate("/", { replace: true });
