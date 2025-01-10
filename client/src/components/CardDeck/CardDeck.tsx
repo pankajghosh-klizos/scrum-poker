@@ -37,7 +37,7 @@ const CardDeck = () => {
       <li>
         <Card
           value={firstOption}
-          onClick={() => handleVote(firstOption)}
+          onClick={() => handleVote({ card: firstOption })}
           className={`${
             participant?.selectedCard == firstOption
               ? "bg-secondary-subtle"
@@ -60,7 +60,7 @@ const CardDeck = () => {
       <li>
         <Card
           value={lastOption}
-          onClick={() => handleVote(lastOption)}
+          onClick={() => handleVote({ card: lastOption })}
           className={`${
             participant?.selectedCard == lastOption ? "bg-secondary-subtle" : ""
           }`}
