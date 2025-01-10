@@ -9,8 +9,9 @@ export const RoomEventEnum = Object.freeze({
 });
 
 export const CookieOptions = {
-  httpOnly: true,
-  secure: true,
-  sameSite: "none",
-  partitioned: true,
+  httpOnly: true, // prevents client-side JavaScript from accessing the cookie
+  secure: process.env.NODE_ENV == "production", // the cookie is only sent over HTTPS (true)
+  sameSite: "None", // allows cross-site usage (required for third-party contexts)
+  domain: process.env.CORS_ORIGIN, // frontend domain, including subdomains
+  path: "/", // the cookie will be accessible for the entire domain
 };
