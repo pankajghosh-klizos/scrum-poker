@@ -115,6 +115,15 @@ const revealCard = async () => {
   }
 };
 
+const voteAgain = async () => {
+  try {
+    const response = await apiClient.put(`/api/v1/room/vote-again`);
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+};
+
 export {
   createRoom,
   closeRoom,
@@ -123,4 +132,5 @@ export {
   leaveRoom,
   selectCard,
   revealCard,
+  voteAgain,
 };
