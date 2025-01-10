@@ -29,3 +29,23 @@ app.use("/api/v1/health", healthcheckRouter);
 app.use("/api/v1/room", roomRouter);
 
 export { httpServer };
+
+/**
+ * socket.io
+ */
+
+import { Server } from "socket.io";
+import { initializeSocketIO } from "./socket/index.js";
+
+const io = new Server(httpServer, {
+  pingTimeout: 60000,
+  cors: {
+    origin: process.env.CORS_ORIGIN,
+    credentials: true,
+  },
+  transports: ["websocket"],
+});
+
+app.set("io", io);
+
+initializeSocketIO(io);
