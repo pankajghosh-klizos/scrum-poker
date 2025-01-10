@@ -106,4 +106,21 @@ const selectCard = async (data: { card: string }) => {
   }
 };
 
-export { createRoom, closeRoom, getRoom, joinRoom, leaveRoom, selectCard };
+const revealCard = async () => {
+  try {
+    const response = await apiClient.put(`/api/v1/room/reveal`);
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+};
+
+export {
+  createRoom,
+  closeRoom,
+  getRoom,
+  joinRoom,
+  leaveRoom,
+  selectCard,
+  revealCard,
+};
