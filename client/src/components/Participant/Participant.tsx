@@ -13,6 +13,7 @@ const Participant: FC<ParticipantProps> = ({ participant }) => {
         className={`pe-none border-light-subtle ${
           participant?.role === "admin" ? "bg-success" : ""
         } ${participant?.role === "participant" ? "bg-primary" : ""}`}
+        checked={participant?.isCardSelected}
       />
       {participant && (
         <p className="m-0 fs-5 text-center">

@@ -1,13 +1,22 @@
 import { FC } from "react";
+import { FiCheckCircle } from "react-icons/fi";
+import { useSelector } from "react-redux";
 
 interface CardProps {
   value?: string;
   className?: string;
   onClick?: () => void;
   disabled?: boolean;
+  checked?: boolean;
 }
 
-const Card: FC<CardProps> = ({ value, className, onClick, disabled }) => {
+const Card: FC<CardProps> = ({
+  value,
+  className,
+  onClick,
+  disabled,
+  checked,
+}) => {
   return (
     <div className="d-flex flex-column align-items-center">
       <button
@@ -16,7 +25,7 @@ const Card: FC<CardProps> = ({ value, className, onClick, disabled }) => {
         className={`btn border fs-5 ${className}`}
         style={{ width: "60px", height: "90px", borderRadius: "8px" }}
       >
-        {value}
+        {checked ? <FiCheckCircle size={25} color="#ffffff" /> : value}
       </button>
     </div>
   );
