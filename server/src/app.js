@@ -12,10 +12,7 @@ const httpServer = createServer(app);
 const io = new Server(httpServer, {
   pingTimeout: 60000,
   cors: {
-    origin:
-      process.env.CORS_ORIGIN == "*"
-        ? "*"
-        : process.env.CORS_ORIGIN?.split(", "),
+    origin: process.env.CORS_ORIGIN,
     credentials: true,
   },
 });
@@ -27,10 +24,7 @@ app.set("io", io);
 // global middleware
 app.use(
   cors({
-    origin:
-      process.env.CORS_ORIGIN == "*"
-        ? "*"
-        : process.env.CORS_ORIGIN?.split(","),
+    origin: process.env.CORS_ORIGIN,
     credentials: true,
   })
 );
