@@ -85,18 +85,15 @@ const closeRoom = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "Room closed."));
 });
 
-const getRoom = asyncHandler(async (req, res) => {
+const getRoom = asyncHandler(async (req, res, next) => {
   if (req.room.status === "finished") {
-    return res
-      .status(200)
-      .clearCookie("accessToken", CookieOptions)
-      .json(new ApiResponse(200, "Room closed."));
+    return next(new ApiError(400, "Room closed."));
   }
 
-  return res.status(200).json(
+  res.status(200).json(
     new ApiResponse(200, "Room found.", {
       room: req.room,
-      participant: req.participant,
+      participant: req.participant || null,
     })
   );
 });

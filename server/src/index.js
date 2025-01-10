@@ -15,7 +15,7 @@ const majorNodeVersion = +process.env.NODE_VERSION.split(".")[0] || 0;
 const port = process.env.PORT;
 
 const startServer = () => {
-  httpServer.listen(port, () => {
+  httpServer.listen(port, "0.0.0.0", () => {
     console.info("⚙️  Server is running on port:", port);
   });
 };
