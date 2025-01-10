@@ -1,3 +1,8 @@
+.poker-table {
+  min-height: 120px;
+  min-width: 180px;
+}
+
 @media screen and (min-width: 768px) {
   .poker-table {
     min-height: 200px;

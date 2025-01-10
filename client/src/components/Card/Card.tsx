@@ -22,7 +22,7 @@ const Card: FC<CardProps> = ({
         onClick={onClick}
         disabled={disabled}
         className={`btn border fs-5 ${className}`}
-        style={{ width: "60px", height: "90px", borderRadius: "8px" }}
+        style={{ width: "60px", height: "90px" }}
       >
         {checked ? <FiCheckCircle size={25} color="#ffffff" /> : value}
       </button>
