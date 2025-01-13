@@ -18,7 +18,7 @@ import {
 } from "../../store/slices/participant.slice";
 import { useNavigate } from "react-router";
 
-const socket = io("ws://localhost:8080", {
+const socket = io(import.meta.env.VITE_SOCKET_URL, {
   transports: ["websocket"],
 });
 
