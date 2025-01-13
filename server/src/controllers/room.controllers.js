@@ -5,13 +5,12 @@ import { Room } from "../models/room.models.js";
 import { v4 as uuidv4 } from "uuid";
 import { CookieOptions } from "../constants.js";
 import calculateAverage from "../utils/calculateAverage.js";
+import { emitUpdatedRoom } from "../app.js";
 
 const generateAccessToken = async (roomId) => {
   try {
     const room = await Room.findById(roomId);
-
     const accessToken = room.generateAccessToken();
-
     return { accessToken };
   } catch (error) {
     throw new ApiError(
@@ -29,17 +28,11 @@ const createRoom = asyncHandler(async (req, res) => {
   }
 
   const roomId = uuidv4();
-
   const roomData = {
     roomId,
     gameName,
     votingSystem,
-    participants: [
-      {
-        displayName,
-        role: "admin",
-      },
-    ],
+    participants: [{ displayName, role: "admin" }],
   };
 
   const room = await Room.create(roomData);
@@ -68,17 +61,18 @@ const closeRoom = asyncHandler(async (req, res) => {
 
   const updatedRoom = await Room.findByIdAndUpdate(
     req.room._id,
-    {
-      $set: {
-        status: "finished",
-      },
-    },
+    { $set: { status: "finished" } },
     { new: true }
   );
 
   if (!updatedRoom) {
     throw new ApiError(500, "Something went wrong while closing the room.");
   }
+
+  emitUpdatedRoom(updatedRoom.roomId, {
+    room: updatedRoom,
+    message: "Room closed successfully.",
+  });
 
   return res
     .status(200)
@@ -94,7 +88,7 @@ const getRoom = asyncHandler(async (req, res, next) => {
   res.status(200).json(
     new ApiResponse(200, "Room found.", {
       room: req.room,
-      participant: req.participant || null,
+      participant: req.participant,
     })
   );
 });
@@ -107,32 +101,24 @@ const joinRoom = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Display name is required.");
   }
 
-  // Find the room by roomId from the URL parameters
   const room = await Room.findOne({ roomId });
 
   if (!room) {
     throw new ApiError(404, "Room not found.");
   }
 
-  if (room.status === "finished") {
-    throw new ApiError(400, "Room has already been closed.");
+  if (
+    room.status === "finished" ||
+    room.participants.length >= room.maxParticipants
+  ) {
+    throw new ApiError(400, "Cannot join the room.");
   }
 
-  if (room.participants.length >= room.maxParticipants) {
-    throw new ApiError(400, "Room is full.");
-  }
-
-  const participant = {
-    displayName,
-    role: "participant",
-  };
+  const participant = { displayName, role: "participant" };
 
   const updatedRoom = await Room.findByIdAndUpdate(
     room._id,
-    {
-      $push: { participants: participant },
-      $set: { status: "ongoing" },
-    },
+    { $push: { participants: participant }, $set: { status: "ongoing" } },
     { new: true }
   );
 
@@ -141,6 +127,11 @@ const joinRoom = asyncHandler(async (req, res) => {
   }
 
   const { accessToken } = await generateAccessToken(updatedRoom._id);
+
+  emitUpdatedRoom(updatedRoom.roomId, {
+    room: updatedRoom,
+    message: `${displayName} joined the room.`,
+  });
 
   return res
     .status(200)
@@ -156,9 +147,7 @@ const joinRoom = asyncHandler(async (req, res) => {
 const leaveRoom = asyncHandler(async (req, res) => {
   const updatedRoom = await Room.findByIdAndUpdate(
     req.room._id,
-    {
-      $pull: { participants: { _id: req.participant._id } },
-    },
+    { $pull: { participants: { _id: req.participant._id } } },
     { new: true }
   );
 
@@ -170,6 +159,11 @@ const leaveRoom = asyncHandler(async (req, res) => {
     updatedRoom.status = "waiting";
     await updatedRoom.save();
   }
+
+  emitUpdatedRoom(updatedRoom.roomId, {
+    room: updatedRoom,
+    message: `${req.participant.displayName} left the room.`,
+  });
 
   return res
     .status(200)
@@ -185,10 +179,7 @@ const selectCard = asyncHandler(async (req, res) => {
   }
 
   const updatedRoom = await Room.findOneAndUpdate(
-    {
-      _id: req.room._id,
-      "participants._id": req.participant._id,
-    },
+    { _id: req.room._id, "participants._id": req.participant._id },
     {
       $set: {
         "participants.$.selectedCard": card,
@@ -201,6 +192,11 @@ const selectCard = asyncHandler(async (req, res) => {
   if (!updatedRoom) {
     throw new ApiError(500, "Something went wrong while selecting the card.");
   }
+
+  emitUpdatedRoom(updatedRoom.roomId, {
+    room: updatedRoom,
+    message: `${req.participant.displayName} selected a card.`,
+  });
 
   return res.status(200).json(new ApiResponse(200, "Card selected."));
 });
@@ -216,7 +212,7 @@ const revealCard = asyncHandler(async (req, res) => {
     req.room._id,
     {
       $set: {
-        average: average,
+        average,
         roundCount: req.room.roundCount + 1,
         isCardRevealed: true,
       },
@@ -228,15 +224,17 @@ const revealCard = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Something went wrong while revealing the card.");
   }
 
+  emitUpdatedRoom(updatedRoom.roomId, {
+    room: updatedRoom,
+    message: "Cards revealed by the admin.",
+  });
+
   return res.status(200).json(new ApiResponse(200, "Card revealed."));
 });
 
 const voteAgain = asyncHandler(async (req, res) => {
   const updatedRoom = await Room.findOneAndUpdate(
-    {
-      _id: req.room._id,
-      "participants._id": req.participant._id,
-    },
+    { _id: req.room._id },
     {
       $set: {
         average: 0,
@@ -251,6 +249,11 @@ const voteAgain = asyncHandler(async (req, res) => {
   if (!updatedRoom) {
     throw new ApiError(500, "Something went wrong while voting again.");
   }
+
+  emitUpdatedRoom(updatedRoom.roomId, {
+    room: updatedRoom,
+    message: "Voting reset for the next round.",
+  });
 
   return res.status(200).json(new ApiResponse(200, "Voted again."));
 });

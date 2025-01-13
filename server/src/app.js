@@ -35,17 +35,34 @@ export { httpServer };
  */
 
 import { Server } from "socket.io";
-import { initializeSocketIO } from "./socket/index.js";
 
 const io = new Server(httpServer, {
   pingTimeout: 60000,
   cors: {
     origin: process.env.CORS_ORIGIN,
     credentials: true,
+    methods: ["GET", "POST"],
   },
   transports: ["websocket"],
 });
 
-app.set("io", io);
+io.on("connection", (socket) => {
+  socket.on("joinRoom", (roomId) => {
+    socket.join(roomId);
+    console.log(`Socket ${socket.id} joined room ${roomId}`);
+  });
 
-initializeSocketIO(io);
+  socket.on("disconnect", () => {
+    console.log("A user disconnected:", socket.id);
+  });
+});
+
+export const emitUpdatedRoom = (roomId, data) => {
+  if (!io) {
+    console.error("Socket.IO instance not initialized.");
+    return;
+  }
+
+  // Emit the updated room data to all clients in the room
+  io.to(roomId).emit("roomUpdated", data);
+};
