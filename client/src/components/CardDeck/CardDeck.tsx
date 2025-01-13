@@ -1,12 +1,19 @@
-import { useSelector } from "react-redux";
-import Card from "../Card/Card";
 import { useState } from "react";
-import { selectCard } from "../../api";
+import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 
+import Card from "../Card/Card";
+import { selectCard } from "../../api";
+import { ParticipantData, RoomData } from "../../interfaces";
+import { setSelectedCard } from "../../store/slices/participant.slice";
+
 const CardDeck = () => {
-  const { room } = useSelector((state: any) => state.room);
-  const { participant } = useSelector((state: any) => state.participant);
+  const dispatch = useDispatch();
+  const { room } = useSelector((state: { room: RoomData }) => state.room);
+  const { participant } = useSelector(
+    (state: { participant: ParticipantData }) => state.participant
+  );
+
   const cardOptions = room?.votingSystem.split(", ");
   const firstOption = cardOptions[0]?.slice(-1);
   const lastOption = cardOptions[cardOptions.length - 1]?.slice(0, 1);
@@ -15,14 +22,17 @@ const CardDeck = () => {
   const handleVote = async (data: { card: string }) => {
     setLoading(true);
     try {
+      dispatch(setSelectedCard(data.card));
       const res = await selectCard(data);
 
       if (!res?.success) {
         toast.error("Error select card");
+        dispatch(setSelectedCard(""));
       }
     } catch (error) {
       console.error("Error select card", error);
       toast.error("Error select card");
+      dispatch(setSelectedCard(""));
     } finally {
       setLoading(false);
     }
@@ -31,7 +41,7 @@ const CardDeck = () => {
   return (
     <ul
       className={`list-unstyled d-flex flex-wrap gap-2 justify-content-center ${
-        participant?.selectedCard ? "pe-none opacity-50" : ""
+        participant?.isCardSelected ? "pe-none opacity-75" : ""
       }`}
     >
       <li>

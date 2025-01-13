@@ -16,8 +16,6 @@ const VoteAgainBtn = () => {
         toast.error("Error vote again.");
         return;
       }
-
-      toast.success("Vote Again.");
     } catch (error) {
       console.error("Error vote again:", error);
     } finally {

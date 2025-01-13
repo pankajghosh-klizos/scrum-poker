@@ -1,19 +1,20 @@
-import { FC } from "react";
 import Card from "../Card/Card";
-import { ParticipantData } from "../../interfaces";
+import { ParticipantProps, RoomData } from "../../interfaces";
+import { useSelector } from "react-redux";
 
-interface ParticipantProps {
-  participant: ParticipantData;
-}
+const Participant = ({ participant }: ParticipantProps) => {
+  const { room } = useSelector((state: { room: RoomData }) => state.room);
 
-const Participant: FC<ParticipantProps> = ({ participant }) => {
   return (
     <div className="d-flex flex-column gap-2">
       <Card
         className={`pe-none border-light-subtle ${
-          participant?.role === "admin" ? "bg-success" : ""
-        } ${participant?.role === "participant" ? "bg-primary" : ""}`}
-        checked={participant?.isCardSelected}
+          participant?.role === "admin" ? "bg-success text-white" : ""
+        } ${
+          participant?.role === "participant" ? "bg-primary text-white" : ""
+        }`}
+        value={participant?.selectedCard ?? ""}
+        checked={participant?.isCardSelected && !room?.isCardRevealed}
       />
       {participant && (
         <p className="m-0 fs-5 text-center">

@@ -1,21 +1,7 @@
-import { FC } from "react";
 import { FiCheckCircle } from "react-icons/fi";
+import { CardProps } from "../../interfaces";
 
-interface CardProps {
-  value?: string;
-  className?: string;
-  onClick?: () => void;
-  disabled?: boolean;
-  checked?: boolean;
-}
-
-const Card: FC<CardProps> = ({
-  value,
-  className,
-  onClick,
-  disabled,
-  checked,
-}) => {
+const Card = ({ value, className, onClick, disabled, checked }: CardProps) => {
   return (
     <div className="d-flex flex-column align-items-center">
       <button
@@ -24,7 +10,11 @@ const Card: FC<CardProps> = ({
         className={`btn border fs-5 ${className}`}
         style={{ width: "60px", height: "90px" }}
       >
-        {checked ? <FiCheckCircle size={25} color="#ffffff" /> : value}
+        {checked ? (
+          <FiCheckCircle size={25} color="#ffffff" />
+        ) : (
+          <span>{value}</span>
+        )}
       </button>
     </div>
   );

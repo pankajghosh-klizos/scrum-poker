@@ -1,13 +1,14 @@
 import localforage from "localforage";
-import Loader from "../Loader/Loader";
-import Button from "./Button";
-import { clearRoom } from "../../store/slices/room.slice";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
+
+import Button from "./Button";
+import Loader from "../Loader/Loader";
 import { leaveRoom } from "../../api";
-import { clearParticipant } from "../../store/slices/participant.slice";
+import { resetRoomState } from "../../store/slices/room.slice";
+import { resetParticipantState } from "../../store/slices/participant.slice";
 
 const LeaveRoomBtn = () => {
   const navigate = useNavigate();
@@ -25,8 +26,8 @@ const LeaveRoomBtn = () => {
       }
 
       localforage.clear();
-      dispatch(clearRoom());
-      dispatch(clearParticipant());
+      dispatch(resetRoomState());
+      dispatch(resetParticipantState());
       navigate("/", { replace: true });
     } catch (error) {
       console.error("Error leaving room:", error);

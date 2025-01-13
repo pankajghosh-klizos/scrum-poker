@@ -16,8 +16,6 @@ const RevealBtn = () => {
         toast.error("Error reveal cards.");
         return;
       }
-
-      toast.success("Cards revealed.");
     } catch (error) {
       console.error("Error reveal cards:", error);
     } finally {

@@ -1,21 +1,15 @@
 import { useNavigate } from "react-router";
 import { Button, Container } from "../../components";
 import { HomeBanner } from "../../constants/images.ts";
-import { useEffect, useCallback } from "react";
+import { useEffect } from "react";
 import localforage from "localforage";
 
 const Home = () => {
   const navigate = useNavigate();
 
-  // Use useCallback to memoize the clearAll function
-  const clearAll = useCallback(async () => {
-    await localforage.clear();
-  }, []);
-
-  // Use useEffect with a dependency array to prevent unnecessary re-renders
   useEffect(() => {
-    clearAll();
-  }, [clearAll]);
+    localforage.clear();
+  }, []);
 
   return (
     <Container>

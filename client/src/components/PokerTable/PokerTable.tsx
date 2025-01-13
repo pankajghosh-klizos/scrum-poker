@@ -1,28 +1,30 @@
 import { useSelector } from "react-redux";
+
 import Participant from "../Participant/Participant";
-import "./PokerTable.css";
 import RevealBtn from "../Button/RevealBtn";
+import { ParticipantData, RoomData } from "../../interfaces";
+import "./PokerTable.css";
 
 const PokerTable = () => {
-  const { room } = useSelector((state: any) => state.room);
-  const { participant } = useSelector((state: any) => state.participant);
+  const { room } = useSelector((state: { room: RoomData }) => state.room);
+  const { participant } = useSelector(
+    (state: { participant: ParticipantData }) => state.participant
+  );
 
   return (
     <div className="d-grid gap-3 gap-md-4">
+      {/* Top Row of Participants */}
       <div className="participants d-flex gap-3 gap-md-5 align-items-center justify-content-center">
-        <Participant participant={room?.participants[6]} />
-        <Participant participant={room?.participants[2]} />
-        <Participant participant={room?.participants[4]} />
-        <Participant participant={room?.participants[8]} />
+        {[6, 2, 4, 8].map((pIndex) => (
+          <Participant participant={room?.participants[pIndex]} key={pIndex} />
+        ))}
       </div>
 
+      {/* Poker Table Section */}
       <div className="d-flex gap-3 gap-md-5 align-items-center justify-content-center">
         <Participant participant={room?.participants[0]} />
 
-        <div
-          className="poker-table d-flex align-items-center justify-content-center bg-primary-subtle rounded-4 p-5"
-          style={{}}
-        >
+        <div className="poker-table d-flex align-items-center justify-content-center bg-primary-subtle rounded-4 p-5">
           {!participant.isCardSelected && (
             <p className="m-0 text-muted fs-5 text-center">Pick your cards!</p>
           )}
@@ -41,11 +43,11 @@ const PokerTable = () => {
         <Participant participant={room?.participants[1]} />
       </div>
 
+      {/* Bottom Row of Participants */}
       <div className="participants d-flex gap-3 gap-md-5 align-items-center justify-content-center">
-        <Participant participant={room?.participants[9]} />
-        <Participant participant={room?.participants[3]} />
-        <Participant participant={room?.participants[5]} />
-        <Participant participant={room?.participants[7]} />
+        {[9, 3, 5, 7].map((pIndex) => (
+          <Participant participant={room?.participants[pIndex]} key={pIndex} />
+        ))}
       </div>
     </div>
   );

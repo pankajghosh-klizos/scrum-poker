@@ -5,8 +5,8 @@ import { useNavigate } from "react-router";
 import { useState } from "react";
 import Loader from "../Loader/Loader";
 import { useDispatch } from "react-redux";
-import { clearRoom } from "../../store/slices/room.slice";
-import { clearParticipant } from "../../store/slices/participant.slice";
+import { resetRoomState } from "../../store/slices/room.slice";
+import { resetParticipantState } from "../../store/slices/participant.slice";
 import localforage from "localforage";
 
 const CloseRoomBtn = () => {
@@ -25,8 +25,8 @@ const CloseRoomBtn = () => {
       }
 
       localforage.clear();
-      dispatch(clearRoom());
-      dispatch(clearParticipant());
+      dispatch(resetRoomState());
+      dispatch(resetParticipantState());
       navigate("/", { replace: true });
     } catch (error) {
       console.error("Error closing room:", error);
