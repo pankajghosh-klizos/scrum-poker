@@ -10,7 +10,7 @@ import {
   PokerTable,
   VoteAgainBtn,
 } from "../../components";
-import { ParticipantData, RoomData } from "../../interfaces";
+import { ParticipantData } from "../../interfaces";
 import { resetRoomState, setRoomDetails } from "../../store/slices/room.slice";
 import {
   resetParticipantState,
