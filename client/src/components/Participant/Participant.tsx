@@ -1,9 +1,9 @@
 import Card from "../Card/Card";
-import { ParticipantProps, RoomData } from "../../interfaces";
+import { ParticipantProps } from "../../interfaces";
 import { useSelector } from "react-redux";
 
 const Participant = ({ participant }: ParticipantProps) => {
-  const { room } = useSelector((state: { room: RoomData }) => state.room);
+  const { room } = useSelector((state: any) => state.room);
 
   return (
     <div className="d-flex flex-column gap-2">

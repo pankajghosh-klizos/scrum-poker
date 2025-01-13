@@ -2,14 +2,11 @@ import { useSelector } from "react-redux";
 
 import Participant from "../Participant/Participant";
 import RevealBtn from "../Button/RevealBtn";
-import { ParticipantData, RoomData } from "../../interfaces";
 import "./PokerTable.css";
 
 const PokerTable = () => {
-  const { room } = useSelector((state: { room: RoomData }) => state.room);
-  const { participant } = useSelector(
-    (state: { participant: ParticipantData }) => state.participant
-  );
+  const { room } = useSelector((state: any) => state.room);
+  const { participant } = useSelector((state: any) => state.participant);
 
   return (
     <div className="d-grid gap-3 gap-md-4">

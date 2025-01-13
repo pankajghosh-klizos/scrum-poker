@@ -25,10 +25,8 @@ const socket = io("ws://localhost:8080", {
 const PlayGame = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { room } = useSelector((state: { room: RoomData }) => state.room);
-  const { participant } = useSelector(
-    (state: { participant: ParticipantData }) => state.participant
-  );
+  const { room } = useSelector((state: any) => state.room);
+  const { participant } = useSelector((state: any) => state.participant);
 
   useEffect(() => {
     // Join the room when the component mounts

@@ -4,15 +4,12 @@ import toast from "react-hot-toast";
 
 import Card from "../Card/Card";
 import { selectCard } from "../../api";
-import { ParticipantData, RoomData } from "../../interfaces";
 import { setSelectedCard } from "../../store/slices/participant.slice";
 
 const CardDeck = () => {
   const dispatch = useDispatch();
-  const { room } = useSelector((state: { room: RoomData }) => state.room);
-  const { participant } = useSelector(
-    (state: { participant: ParticipantData }) => state.participant
-  );
+  const { room } = useSelector((state: any) => state.room);
+  const { participant } = useSelector((state: any) => state.participant);
 
   const cardOptions = room?.votingSystem.split(", ");
   const firstOption = cardOptions[0]?.slice(-1);
