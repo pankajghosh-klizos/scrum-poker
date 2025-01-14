@@ -22,9 +22,12 @@ const PokerTable = () => {
         <Participant participant={room?.participants[0]} />
 
         <div className="poker-table d-flex align-items-center justify-content-center bg-primary-subtle rounded-4 p-5">
-          {!participant.isCardSelected && (
-            <p className="m-0 text-muted fs-5 text-center">Pick your cards!</p>
-          )}
+          {!participant.isCardSelected ||
+            (room?.average === 0 && (
+              <p className="m-0 text-muted fs-5 text-center">
+                Pick your cards!
+              </p>
+            ))}
           {participant.role == "admin" &&
             participant.isCardSelected &&
             !room.isCardRevealed && <RevealBtn />}

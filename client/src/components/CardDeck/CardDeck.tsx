@@ -38,7 +38,9 @@ const CardDeck = () => {
   return (
     <ul
       className={`list-unstyled d-flex flex-wrap gap-2 justify-content-center ${
-        participant?.isCardSelected ? "pe-none opacity-75" : ""
+        participant?.isCardSelected || room?.average > 0
+          ? "pe-none opacity-75"
+          : ""
       }`}
     >
       <li>
