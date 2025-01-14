@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
 import toast from "react-hot-toast";
+import confetti from "canvas-confetti";
 
 import {
   CardDeck,
@@ -39,22 +40,39 @@ const PlayGame = () => {
       const { message, room } = data;
 
       if (room.status === "finished") {
-        toast(message || "Room closed.", {
-          icon: "ℹ️",
-        });
-
+        toast(message || "Room closed.", { icon: "ℹ️" });
         dispatch(resetRoomState());
         dispatch(resetParticipantState());
         navigate("/", { replace: true });
         return;
       }
 
+      // Find the current participant
       const updatedParticipant = room.participants.find(
         (p: ParticipantData) => p.displayName === participant.displayName
       );
 
+      // Dispatch the updated room and participant details
       dispatch(setRoomDetails(room));
       dispatch(setParticipantDetails(updatedParticipant));
+
+      // Check if all participants selected the same card
+      const allSameCard =
+        room.isCardRevealed &&
+        room.participants.every((p: ParticipantData) => p.selectedCard) &&
+        room.participants.every(
+          (p: ParticipantData) =>
+            p.selectedCard === room.participants[0].selectedCard
+        );
+
+      if (allSameCard) {
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: { y: 0.6 },
+        });
+      }
+
       toast.success(message || "Room updated.");
     });
 
