@@ -22,7 +22,7 @@ const PokerTable = () => {
       <div className="d-flex gap-3 gap-md-5 align-items-center justify-content-center">
         <Participant participant={room?.participants[0]} />
 
-        <div className="poker-table d-flex align-items-center justify-content-center bg-primary-subtle rounded-4 p-5">
+        <div className="poker-table d-flex align-items-center justify-content-center bg-primary-subtle rounded-4 p-md-5">
           {room.average == 0 && !participant.isCardSelected && (
             <p className="m-0 text-muted fs-5 text-center">Pick your cards!</p>
           )}
