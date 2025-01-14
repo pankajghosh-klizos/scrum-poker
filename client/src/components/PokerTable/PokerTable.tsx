@@ -7,7 +7,6 @@ import "./PokerTable.css";
 const PokerTable = () => {
   const { room } = useSelector((state: any) => state.room);
   const { participant } = useSelector((state: any) => state.participant);
-  console.log(room);
 
   return (
     <div className="d-grid gap-3 gap-md-4">

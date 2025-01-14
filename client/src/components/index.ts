@@ -14,6 +14,7 @@ import PokerTable from "./PokerTable/PokerTable";
 import RevealBtn from "./Button/RevealBtn";
 import Card from "./Card/Card";
 import CardDeck from "./CardDeck/CardDeck";
+import CardPercentage from "./CardPercentage/CardPercentage";
 
 export {
   Container,
@@ -32,4 +33,5 @@ export {
   RevealBtn,
   Card,
   CardDeck,
+  CardPercentage,
 };

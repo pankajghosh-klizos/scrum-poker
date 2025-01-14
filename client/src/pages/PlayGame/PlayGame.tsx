@@ -6,6 +6,7 @@ import confetti from "canvas-confetti";
 
 import {
   CardDeck,
+  CardPercentage,
   Container,
   Loader,
   PokerTable,
@@ -96,6 +97,9 @@ const PlayGame = () => {
           <CardDeck />
           {participant.role === "admin" && room.isCardRevealed && (
             <VoteAgainBtn />
+          )}
+          {participant.role === "admin" && room.isCardRevealed && (
+            <CardPercentage />
           )}
         </>
       )}
