@@ -98,7 +98,7 @@ const PlayGame = () => {
           {participant.role === "admin" && room.isCardRevealed && (
             <VoteAgainBtn />
           )}
-          {participant.role === "admin" && room.isCardRevealed && (
+          {room.isCardRevealed && (
             <CardPercentage />
           )}
         </>
