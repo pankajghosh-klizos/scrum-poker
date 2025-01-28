@@ -11,7 +11,7 @@ dotenv.config({
  * This means you can not use it with common js modules or Node version < 14.
  */
 
-const majorNodeVersion = +process.env.NODE_VERSION.split(".")[0] || 0;
+const majorNodeVersion = +process.env.NODE_VERSION?.split(".")[0] || 0;
 const port = process.env.PORT;
 
 const startServer = () => {
